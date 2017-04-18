@@ -1,0 +1,80 @@
+%
+% Titelseiten Datei
+%
+
+\begin{titlepage}
+
+	% Fehler "destination with the same identifier" unterdrücken...
+  \setcounter{page}{-1}
+
+	% Titelseite
+	\begin{figure}[h]
+		\begin{minipage}[b]{25mm}
+			\includegraphics[width=25mm,clip]{images/logo_uhh}
+		\end{minipage}
+		\begin{minipage}[b]{2mm}
+			\includegraphics[width=1mm,height=24mm]{images/greypixel}
+		\end{minipage}
+		\begin{minipage}[b]{12 cm}
+			{\sffamily
+				{\Large Universität Hamburg } \\
+				Fakultät für Mathematik,\\
+				Informatik und Naturwissenschaften \\
+				Department Informatik \\
+			}
+		\end{minipage}
+	\end{figure}
+
+	\vfill
+	
+	\begin{center}
+		% Diplomarbeit 
+		\noindent { \huge
+			Seminararbeit \\
+					}
+		\vspace{14mm}
+		% Titel
+		\noindent \textbf{\Large
+		  Einstiegspunkte für Design und Codierung \\bei einer Wartungsaufgabe \\		  
+		}
+		\vspace{10mm}
+		
+		\noindent {\large
+		Seminar Softwarereengineering \\im SoSe 17
+		}
+	\end{center}
+	
+	\vfill
+	
+	\begin{tabbing}
+		\hspace{22.5em} \=  \kill
+		\textbf{Felix Fröhlich} \> \textbf{Thorben Wiese}\\
+		
+		\noindent \rule{\textwidth}{0.4mm} \\
+		
+		\noindent{\textrm{M.Sc. Informatik}} \> \textrm{M.Sc. Informatik}\\
+		\noindent{\textrm{Matr.-Nr. 6523076}} \> \textrm{Matr.-Nr. 6537204}\\
+		\noindent{\textrm{Fachsemester 2}} \> \textrm{Fachsemester 2}\\[0.5cm]
+		
+		Dozent: \hspace{1em} Prof. Dr. Matthias Riebisch \\
+		
+		\hspace{24em} \=  \kill
+		
+	\end{tabbing}
+	
+	% Rückseite der Titelseite mit Zitat
+	\newpage 
+	\thispagestyle{empty}
+	\setcounter{page}{0}
+
+	% wenn man Lust auf ein Zitat hat...
+	% ... ansonsten auskommentieren
+	~\\ \vfill \noindent 
+%	A distributed system is one where the failure of some \\
+%	computer I've never heard of can keep me from getting my work done. \\
+%	\textit{-- Leslie Lamport}
+\end{titlepage}
+
+%
+% EOF
+%
