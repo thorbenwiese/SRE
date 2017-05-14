@@ -13,7 +13,7 @@
 % NB: the document class 'llncs' has its own and detailed documentation, see
 % ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \documentclass[runningheads,a4paper]{llncs}
@@ -23,7 +23,7 @@
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage[german]{babel}
-\usepackage{natbib}
+\usepackage[numbers]{natbib}
 
 \usepackage{url}
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
@@ -33,11 +33,11 @@
 
 \title{Einstiegspunkte für Design und Codierung \\bei einer Wartungsaufgabe oder Fehlermeldung}
 
-\titlerunning{Einstiegspunkte für Design und Codierung bei einer Wartungsaufgabe oder Fehlermeldung}
+%\titlerunning{Einstiegspunkte für Design und Codierung bei einer Wartungsaufgabe oder Fehlermeldung}
 
 \author{Felix Fröhlich \and Thorben Wiese}
 
-\authorrunning{Felix Fröhlich \and Thorben Wiese}
+%\authorrunning{Felix Fröhlich \and Thorben Wiese}
 
 \institute{Universität Hamburg \\
 Fakultät für Mathematik,\\
@@ -52,53 +52,57 @@ Bei der Entwicklung und Wartung von Software spielt die Identifikation des Nutze
 
 \section{Einleitung}
 
-Die erste Quelle \cite{survey}.
+%TODO Am Ende schreiben?
+Die erste Quelle \cite{survey}.\\
+...\\
+Ziel dieser Seminararbeit ist es, die verschiedenen Analyseverfahren und Technologien zur Erkennung von Features im Code zu beschreiben und zu vergleichen.
 
-\section{Überblick  zu Rubin und Chechik}
+\section{Begriffe}
 
-\begin{itemize}
-	\item Feature $=$ Software Artefakt, das eine spezifische Funktionalität implementiert
-	\item SPLE: Software Product Line Engineering
-	\item Tracebility der Features ist eine der Kernaufgaben von SPLE
-	\item Essenziell für Wartbarkeit von Programmen
-	\item Feature Location hat als Ziel die Identifikation der Beziehung zwischen Features und Implementierung
-	\item Feature nach Rajlich und Chen besteht aus Name, Insension/Bedeutung und Erweiterung(Extension)
-	\item Grundlagen:
-	\begin{itemize}
-		\item Formal Concept Analysis (FCA)
-		\item Latent Semantic Indexing (LSI)
-		\item Term Frequency - Inverse Document Frequency Matrix
-		\item Hyper-link Induced Topic Search (HITS)
-	\end{itemize}
-	\item Technologien:
-	\begin{itemize}
-		\item Statische Feature Location Technologien
-		\begin{itemize}
-			\item Plain Output
-			\item Guided Output
-		\end{itemize}
-		\item Dynamische Feature Location Technologien
-		\begin{itemize}
-			\item Plain Output
-			\item Guided Output	
-		\end{itemize}
-	\end{itemize}
-\end{itemize}
+Für die Vorstellung der Analyseverfahren sollen zunächst einige Begriffe definiert und erklärt werden.
+
+\subsection*{Feature}
+Ein Feature ist ein Software Artefakt, das eine spezifische Funktionalität implementiert \cite{feature}. Diese Funktionalität wird in natürlicher Sprache beschrieben und wird von einem Programmabschnitt wiedergespiegelt. Ein Feature besteht üblicherweise aus einen Namen, einer Bedeutung (Intension) und einer Erweiterung (Extension) \cite{rajlich-chen}.
+
+\subsection*{Feature Location}
+Der Prozess der Feature Location beschreibt die Identifikation der Beziehung zwischen Features und deren Implementierung. Dabei liegt die Beschreibung des Features in natürlicher Sprache vor, die dann einem entsprechenden Codeabschnitt zugeordnet werden soll (Mapping) \cite{survey}.
 
 \section{Analyseverfahren}
-\subsection{Statische Analyse}
-\subsection{Dynamische Analyse}
-\subsection{Textuelle Analyse}
+Grundlagen:
+\begin{itemize}
+	\item Formal Concept Analysis (FCA)
+	\item Latent Semantic Indexing (LSI)
+	\item Term Frequency - Inverse Document Frequency Matrix
+	\item Hyper-link Induced Topic Search (HITS)
+\end{itemize}
 
-\section{Tools}
-\section{Beispiel}
+\subsection{Statische Feature Location Technologien}
+Allgemein statische Analyse, Tools beschreiben, Beispiele
+
+\subsection{Dynamische Feature Location Technologien}
+Allgemein dynamische Analyse, Tools beschreiben, Beispiele
+
+\subsection{Textuelle Feature Location Technologien}
+Allgemein textuelle Analyse, Tools beschreiben, Beispiele
+
+\section{Vergleich}
+
 \section{Fazit}
+Für welchen Zweck welches Analyseverfahren und welche Technologie
+Ergebnis wahrscheinlich: Alles gar nicht so schlecht, je nach Bedarf muss eine Technologie ausgewählt werden oder eventuell mit einer anderen kombiniert werden.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%												LITERATURVERZEICHNIS 												       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
 
 \phantomsection % benötigt für korrekte pdf-darstellung
 \addcontentsline{toc}{section}{Literaturverzeichnis}
-\bibliographystyle{natdin} % Din 1505 nach Lorenzen (Das konkrete Aussehen des Litverzeichnisses ist im header festgelegt)
+\bibliographystyle{vancouver} % Din 1505 nach Lorenzen (Das konkrete Aussehen des Litverzeichnisses ist im header festgelegt)
+\setcitestyle{square}
 \bibliography{literatur}  % Pfad zur *.bib-Datei (Dateiendung wird weggelassen)
 
 \end{document}
