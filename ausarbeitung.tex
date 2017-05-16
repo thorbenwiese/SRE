@@ -120,6 +120,18 @@ Liu et al. [25] (SITIR)
 Allgemein textuelle Analyse, Tools beschreiben, Beispiele
 
 \section{Vergleich}
+Die statische Analyse untersucht den Quelltext vor der Ausführung und hat somit Zugriff auf sämtliche Bestandteile des Programms. Dadurch können Features
+jeglicher Art gefunden werden, seien sie nun funktional oder nicht nicht-funktional. Eine mehrmalige Wiederholung der statischen Analyse eines
+Programms ist idempotent und liefert immer wieder das gleiche Ergebnis. \\
+Während also die statische Analyse einen größeren Feature-Raum untersuchen kann bezüglich ihrer Quantität und Diversität, ist die dynamische
+Analyse an das Programm zu Ausführung gebunden und damit auch an spezifische Eingabeparameter, die den Verlauf bestimmen. Somit kann das Auffinden
+von Features stark eingeschränkt sein und selbst ein gefundenes Feature lässt sich nur schwer generalisieren [20]. \\
+Betrachtet man Verfahren zu statischen und dynamischen Analyse als binären Klassifikator, dann liefern statische Verfahren mit größerer 
+Wahrscheinlichkeit eine Menge false-positives. Diese resultieren nicht nur aus den quantitativ höheren Featureraum sondern auch aus
+der Feststellung, dass die Wahrscheinlichkeit eines gefundenen Features nie genau bestimmt sondern nur approximiert werden kann. Statische
+Verfahren finden also mit größerer Wahrscheinlichkeit Features, die eigentlich gar keine sind, die sogenannte Überapproximiation. \\
+Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, liefern dagegen mehr false-negatives. Existierende Features
+werden in diesem Fall nicht als solche erkannt und falsch klassifiziert was man als Unterapproximation bezeichnet.
 
 \section{Fazit}
 Für welchen Zweck welches Analyseverfahren und welche Technologie
