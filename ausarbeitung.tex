@@ -73,11 +73,15 @@ In diesem Abschnitt sollen verschiedene Analyseverfahren vorgestellt werden, die
 
 %\subsection*{Formal Concept Analysis (FCA)}
 
+%Thorben
 \subsection*{Program Dependence Analysis (PDA)}
 
+%Felix
 \subsection*{Trace Analysis}
 
+%Thorben
 \subsection*{Latent Semantic Indexing (LSI)}
+
 
 %\subsection*{Term Frequency - Inverse Document Frequency Matrix}
 
@@ -85,13 +89,27 @@ In diesem Abschnitt sollen verschiedene Analyseverfahren vorgestellt werden, die
 
 % technologies: PDA, LSI, Trace Analysis
 
+%Thorben
 \subsection{Statische Feature Location Technologien}
-Allgemein statische Analyse, Tools beschreiben, Beispiele\\
+
+In diesem Abschnitt sollen statische Technologien zum Finden von Features im Quelltext vorgestellt werden.
+
+\subsection*{Statische Analyse}
+
+Die Analyse von Quelltext zu einem Zeitpunkt, bei dem das Programm kompiliert wird und noch nicht ausgeführt wurde, wird statische Analyse genannt. Hierbei werden mithilfe von zum Beispeil Datenfluss-Analyse und Kontrollgraphen alle Abhängigkeiten und Funktionsaufrufe innerhalb des Codes analysiert und es können unter anderem Fehler wie zum Beispiel Race-Conditions oder Buffer-Overflows identifiziert werden. Dieser Prozess wird häufig von automatisierten Tools durchgeführt \cite{static}.
+
+\subsection*{Technologie Beispiele}
+
 Robillard et al. [35]\\
 Shao et al. [40]
 
+%Felix
 \subsection{Dynamische Feature Location Technologien}
-Allgemein dynamische Analyse, Tools beschreiben, Beispiele\\
+
+\subsection*{Dynamische Analyse}
+Allgemein dynamische Analyse
+
+\subsection*{Technologie Beispiele}
 Wong et al. [49]\\
 Liu et al. [25] (SITIR)
 
@@ -110,7 +128,7 @@ Ergebnis wahrscheinlich: Alles gar nicht so schlecht, je nach Bedarf muss eine T
 %												LITERATURVERZEICHNIS 												       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\cleardoublepage
+\clearpage
 
 \phantomsection % benötigt für korrekte pdf-darstellung
 \addcontentsline{toc}{section}{Literaturverzeichnis}
