@@ -1,0 +1,39 @@
+\begin{thebibliography}{1}
+
+\bibitem{survey}
+Rubin J, Chechik M.
+\newblock A Survey of Feature Location Techniques.
+\newblock University of Toronto, Department of Computer Science; 2013.
+
+\bibitem{feature}
+IEEE. Std. 829;.
+\newblock Available from:
+  \url{https://standards.ieee.org/findstds/standard/829-2008.html}.
+
+\bibitem{rajlich-chen}
+Chen K, Rajlich V. Case Study of Feature Location Using Dependence Graph.
+\newblock Wayne State University Department of Computer Science;.
+\newblock Available from:
+  \url{http://www.cs.wayne.edu/~severe/publications/Chen.IWPC.2000.FeatureLocation.pdf}.
+
+\bibitem{PDA}
+Stafford J. A Formal, Language-Independent, and Compositional Approach to
+  Interprocedural Control Dependence Analysis.
+\newblock University of Colorado;.
+\newblock Available from:
+  \url{ftp://ftp.sei.cmu.edu/pub/jas/Stafford-thesis.pdf}.
+
+\bibitem{LSI}
+Deerwester S, Dumais S, Furnas G, Landauer T, Harshman R. Indexing by Latent
+  Semantic Analysis.
+\newblock University of Colorado;.
+\newblock Available from:
+  \url{http://lsa.colorado.edu/papers/JASIS.lsi.90.pdf}.
+
+\bibitem{static}
+{Open Web Application Security Project (OWASP)}. Static Code Analysis.
+\newblock Open Web Application Security Project (OWASP);.
+\newblock Available from:
+  \url{https://www.owasp.org/index.php/Static_Code_Analysis}.
+
+\end{thebibliography}

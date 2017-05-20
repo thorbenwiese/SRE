@@ -109,10 +109,20 @@ Shao et al. [40]
 %Felix
 \subsection{Dynamische Feature Location Technologien}
 
+
 \subsection*{Dynamische Analyse}
 Allgemein dynamische Analyse
+Hauptmerkmal der dynamischen Analyse ist ihre Durchführung während der Laufzeit eines Programms. Das bedeutet die Ausführung des Programms ist zwingend erforderlich und während der Laufzeit werden Informationen gesammelt um wahrscheinliche Features zu lokalisieren. Dabei können ausschließlich funktionale Features gefunden werden, da die dynamische Analysetechnik an eine eingeschränkte Sicht auf das Programm gebunden ist, die der Sicht des Anwenders entspricht. \\Ähnlich wie bei der statischen Analyse unterscheidet man zwischen Plain-Output-Techniken, bei denen mögliche, zu einem Feature gehörende, Quellcodebestandteile ungeordnet zurückgeliefert werden und Guided-Output-Techniken, bei denen die ausgegebenen Komponenten durch zusätzliche Informationen in Zusammenhang gebracht werden und ihr Kontext genauer erläutert wird. 
 
-\subsection*{Technologie Beispiele}
+\subsection*{Technologie Beispiel - Plain Output}
+In ihrer wissenschaftlichen Arbeit Location Program Features by using  Execution Slices benutzen die Autoren ein dynamisches Plain-Output-Verfahren zur Analyse von Code. Sie verwenden dabei Execution Slicing im Gegensatz zum Static Slicing. Beide 
+Techniken werden unter Program Slicing zusammengefasst.\\
+Slices können verschiedene Bestandteile eines Programms sein wie z.B. Code-Blöcke oder Kontrollstrukturen. Auch sogenannte c- und p-uses können Bestandteile einer Slice sein.\\ C- und p - uses beschreiben beide den Pfad einer Variable im Programmfluss ohne, dass die Variable verändert wird, wobei c-uses Variablen zur Berechnung dienen und p-uses-Variablen für eine Prädikat oder eine Entscheidung.\\
+Faktoren, wie Heuristiken, Test Cases, Detailgenauigkeit und Tool-Unterstützung sind ausschlaggebend für den Erfolg einer dynamischen Analysetechnik. \\
+Besonderem Augenmerk gilt dabei der Menge der Tests, die dem Programm als Eingabe übergeben werden. Die Autoren heben hervor wie wichtig die richtigen Testmengen sind und unterscheiden zwischen aufrufenden (invoking) tests, die sich explizit auf ein bestimmtes Feature und seine Funktionalität fokussieren und ausschließenden Tests, die alle anderen Test-Sets enthalten, die nicht auf das Feature fokussiert sind worunter aber auch die zu finden sind, welche das gesuchte Feature und weitere Komponenten umfassen d.h. Tests bei denen das Feature nur ein Bestandteil von vielen ist.
+\\ Eine für die Autoren erfolgreiche Herangehensweise war zuerst die Menge aller aufrufenden Tests bilden von denen einige auch die Funktionalität anderer Features testen. Dann bildet man die Menge aller ausschließenden Tests, die jedoch Elemente des gesuchten Features enthalten kann. Die Differenz der beiden ist die Testmenge, die zur Lokalisierung des Features genutzt wird. 
+
+
 Wong et al. [49]\\
 Liu et al. [25] (SITIR)
 
