@@ -27,6 +27,8 @@
 
 \setlength{\parindent}{0pt}
 \usepackage[parfill]{parskip}
+\renewcommand{\arraystretch}{1.3}
+\usepackage[section]{placeins}
 
 \usepackage{url}
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
@@ -77,7 +79,7 @@ In diesem Abschnitt sollen verschiedene Analyseverfahren vorgestellt werden, die
 %\subsection*{Formal Concept Analysis (FCA)}
 
 %Thorben
-\subsection*{Program Dependence Analysis (PDA)}
+\subsection*{Program Dependence Analysis (PDA)}\label{PDA}
 
 Die Analyse eines Programms auf interne Abhängigkeiten wird Abhängigkeitsanalyse (engl. Dependence Analysis) genannt. Sie umfasst in der Regel Kontrollflussabhängigkeiten und Datenabhängigkeiten innerhalb eines Programmes. Diese werden zur Übersetzungszeit mithilfe des Compilers festgestellt. Ziel dieser Analyse ist es zum Beispiel, zu überprüfen, ob ein Programm parallelisiert ausgeführt werden kann. Für die Analyse von Features im Quelltext ist diese Methode hilfreich, da durch sowohl Kontrollflussabhängigkeiten, als auch Datenabhängigkeiten auch semantische Verknüpfungen verschiedener Abschnitte des Codes hergestellt werden können \cite{PDA}.
 
@@ -113,13 +115,45 @@ Das Ergebnis der Programmanalyse ist ein \textit{action-oriented identifier grap
 
 Ein AOIG hat weiterhin zwei unterschiedliche Kantentypen: die \textit{pairing edges} und \textit{use edges}, wobei erstere je ein Verb oder DO Knoten mit einem entsprechenden verb-DO Paar verbinden und letztere ein verb-DO Paar mit allen anderen Knoten verbindet, die es benutzt.
 
-.\\
-Underlying Technology: PDA, NLP\\
-Program Representation: AOIG\\
-Input: Query\\
-User Interaction: ++
+Der Input des Algorithmus ist zunächst eine abstrakte Query, die dann in eine vom Nutzer formulierte Query als Menge von Verb-DO Paaren umformuliert wird. Diese Query soll etwaige interessante Features im Programm beschreiben, indem ausschließlich Verben und DOs aufgelistet werden. Diese werden anschließend vom Algorithmus um von den Wörtern abstammende Wörter erweitert. Im nächsten Schritt werden dem Nutzer Begriffe vorgeschlagen, die sich ähnlich sind. Solche Begriffe können zum Beispiel Synonyme oder umgangssprachliche Bedeutungen von Wörtern sein. Der Nutzer kann hier aus einer Liste von maximal zehn vorgeschlagener Wörter aussuchen, welche zusammen mit ihren abstammenden Wörtern der Query hinzugefügt werden. Ein detaillierter Ablauf des Algorithmus ist in Tabelle \ref{query} beschrieben.
 
-Shao et al. [40]
+Das Erweitern der Query wird so lange vom Nutzer fortgeführt, bis dieser mit der Zusammensetzung zufrieden ist. Anschließend wird der AOIG nach allen Verb-DO Paaren abgesucht, die Wörter der Query enthalten. Es werden alle Methoden extrahiert, bei denen die gefundenen Paare verwendet werden. Zwischen diesen Methoden werden dann die Aufruf-Beziehungen untereinander mittels PDA analysiert (siehe Abschnitt \ref{PDA}).
+
+Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen repräsentieren alle gefundenen Methoden und die Kanten deren strukturellen Beziehungen untereinander.
+
+\begin{table}[h]
+	\centering
+\begin{tabular}{|c|l|}
+	\hline
+	\hspace{0.1cm} \textbf{Schritt} \hspace{0.1cm} & \textbf{Zusammensetzung der Query}\\
+	\hline
+	1 & Abstrakte Suchquery, zB. 'Suche automatisch nach Entitäten'\\
+	\hline
+	2 & Konkrete Suchquery, zB. 'Suche Entitäten'\\
+	\hline
+	3 & Aufgeteilte Suchquery, zB.\\
+	& 'Verb: suchen'\\
+	& 'Objekt: Entität'\\
+	\hline
+	4 & Erste erweiterte Suchquery, zB.\\
+	& 'Verb: suchen, gesucht, gesuchte'\\
+	& 'Objekt: 'die Entität, alle Entitäten, erste Entität'\\
+	\hline
+	5 & Vorgeschlagene Erweiterungen der Suchquery, zB.\\
+	& 'Verb: absuchen, durchsuchen, aufspüren, stöbern, ...'\\
+	& \textit{Nutzer wählt aus}\\
+	& 'Objekt: 'Instanz, Objekt, Symbol, ...'\\
+	& \textit{Nutzer wählt aus}\\
+	\hline
+	6 & Wiederholung von Schritt 5 bis die Query ausreichend erweitert wurde\\
+	\hline
+\end{tabular}
+\label{query}
+\vspace{0.2cm}
+\caption{Zusammensetzung der Such-Query für den AOIG}
+\end{table}
+
+% TODO Shao et al. [40]
 
 %Felix
 \subsection{Dynamische Feature Location Technologien}
