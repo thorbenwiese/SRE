@@ -36,4 +36,11 @@ Deerwester S, Dumais S, Furnas G, Landauer T, Harshman R. Indexing by Latent
 \newblock Available from:
   \url{https://www.owasp.org/index.php/Static_Code_Analysis}.
 
+\bibitem{Executionslices}
+Wong WE, Gokhale SS, und Kishor S~Trivedi JRH. Location Program Features by
+  using Execution Slices.
+\newblock University of California;.
+\newblock Available from:
+  \url{https://www.researchgate.net/profile/Kishor_Trivedi2/publication/3795664_Locating_Program_Features_by_using_Execution_Slices/links/0fcfd50dc6cac8f70e000000/Locating-Program-Features-by-using-Execution-Slices.pdf}.
+
 \end{thebibliography}

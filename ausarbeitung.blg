@@ -12,4 +12,6 @@ Warning--empty author and editor in LSI
 Warning--there's a month but no year in LSI
 Warning--empty author and editor in static
 Warning--there's a month but no year in static
-(There were 11 warnings)
+Warning--empty author and editor in Executionslices
+Warning--there's a month but no year in Executionslices
+(There were 13 warnings)
