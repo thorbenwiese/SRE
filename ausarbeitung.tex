@@ -80,6 +80,7 @@ Die Analyse eines Programms auf interne Abhängigkeiten wird Abhängigkeitsanaly
 
 %Felix
 \subsection*{Trace Analysis}
+Bei der Trace Analysis findet eine Auswertung der Traces (Spuren) statt. Das Erstellen von Spuren ist eine Form des Loggings bei der das Verhalten eines Programms aufgezeichnet wird. Traces unterscheiden sich vom Logging dadurch, dass sie eher von Entwicklern als Administratoren verwendet werden und deutlich weniger abstrahieren sondern eine Menge Ausgabedaten auf niedrigen Ausführungsebenen liefern. Meistens werden mehrere Spuren verwendet, wobei es eine Spur sämtliche wichtigen Ereignisse aufzeichnet und die anderen diese komplexe, quantitativ auffallende Spur nach bestimmten Kriterien filtern. 
 
 %Thorben
 \subsection*{Latent Semantic Indexing (LSI)}
@@ -129,8 +130,9 @@ Nach der Auswertung der Studie kamen die Autoren zu dem Schluss, dass die, auf
 execution slices basierende Methode als ein Einstiegspunkt für Feature Location genutzt werden kann und stellten ihre Eignung dieser Analysetechnik besonders für komplexe System fest in denen sich implementierte Features über mehrere Module erstrecken. Dennoch steht und fällt das Verfahren mit den Test-Mengen mit denen das Programm gestartet wird und die Autoren stellten die Vermutung auf, dass auch in ihrer Fallstudie nicht der gesamte relevante Code gefunden wurde bezüglich eines Features. Auch wenn die Verifizierung der c- und p-uses nicht vollständig durchgeführt werden konnte, waren die SHARPE-Experten doch überrascht über die Detailgenauigkeit mit der xVue Features lokalisiert hatte.\\
 Die Autoren hoben auch die einfache Anwendung des Verfahrens hervor, denn die Berechnung der execution slices war ja durch das Tool vereinfacht und automatisiert worden. Einzig allein die aufrufenden und ausschließenden Tests mussten durch den Anwender definiert werden. Die Identifizierung von c- und p-uses bot den weiteren Vorteil, dass diese Information zur Code Coverage genutzt werden konnte. Das heuristische Verfahren zur Ermittlung der Test-Mengen, welches sie genutzt hatten bewerteten sie als nützlich für den untersuchten Code, doch generell müssen die Heuristiken jeweils an die Art der Implementation angepasst werden. \\
 Die Autoren kommen zu dem Schluss, dass sich ihr Verfahren durchaus für die Lokalisierung von relevanten Code bezüglich eines Features eignet. Es ist besonders nützlich um in großen Code-Bereichen die relevanten Zeilen zu finden, die ein solches Feature implementieren. Dennoch hat das Verfahren die typische Schwäche der dynamischen Analyse: es ist schwierig alle Komponenten im Code, die einem Feature zuzuordnen sind, zu entdecken und die Wahrscheinlichkeit ist groß, dass einige Komponenten nicht entdeckt werden. Der große Vorteil der Methode besteht in der Tool-Unterstützung, wodurch sie sehr einfach durchzuführen ist. 
-Wong et al. [49]\\
-Liu et al. [25] (SITIR)
+
+\subsection*{Technologie Beispiel - Guided Output}
+In dem Paper Feature Location via Information Retrieval based Filtering of a Single Scenario Execution Trace von Dapeng Liu, Andrian Marcus, Denys Poshyvanyk und Vaclav Rajlich werden die Techniken LSI und Execution-Trace-Analyse zusammen genutzt. 
 
 \subsection{Textuelle Feature Location Technologien}
 Allgemein textuelle Analyse, Tools beschreiben, Beispiele
@@ -147,7 +149,8 @@ Wahrscheinlichkeit eine Menge false-positives. Diese resultieren nicht nur aus d
 der Feststellung, dass die Wahrscheinlichkeit eines gefundenen Features nie genau bestimmt sondern nur approximiert werden kann. Statische
 Verfahren finden also mit größerer Wahrscheinlichkeit Features, die eigentlich gar keine sind, die sogenannte Überapproximiation. \\
 Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, liefern dagegen mehr false-negatives. Existierende Features
-werden in diesem Fall nicht als solche erkannt und falsch klassifiziert was man als Unterapproximation bezeichnet.
+werden in diesem Fall nicht als solche erkannt und falsch klassifiziert was man als Unterapproximation bezeichnet.\\
+Worin sich dynamische und statische Verfahren weiterhin unterscheiden ist die Vorarbeit, die bezüglich der Eingabedaten geleistet werden muss. Während statische Verfahren, wie bereits erwähnt, bei mehrmaliger Durchführung das gleiche Ergebnis liefern sollten, sind dynamische Verfahren nur so gut in der Identifizierung von Features im Quellcode wie die Eingabeparameter mit denen das Programm gestartet wird. Diese müssen mit verschiedenen Heuristiken genau evaluiert werden, da eine ungenaue Testmenge in völlig unbrauchbare Ausgaben münden kann. Es ist in dieser Hinsicht mehr Aufwand nötig als bei statischen Analyse und der Anwender, der die Testfälle auswählt, muss qualifiziert und erfahren sein.
 
 \section{Fazit}
 Für welchen Zweck welches Analyseverfahren und welche Technologie
