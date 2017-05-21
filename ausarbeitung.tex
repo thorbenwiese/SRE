@@ -107,7 +107,7 @@ In diesem Abschnitt sollen statische Technologien zum Finden von Features im Que
 
 Die Analyse von Quelltext zu einem Zeitpunkt, bei dem das Programm kompiliert wird und noch nicht ausgeführt wurde, wird statische Analyse genannt. Hierbei werden mithilfe von zum Beispeil Datenfluss-Analyse und Kontrollgraphen alle Abhängigkeiten und Funktionsaufrufe innerhalb des Codes analysiert und es können unter anderem Fehler wie zum Beispiel Race-Conditions oder Buffer-Overflows identifiziert werden. Dieser Prozess wird häufig von automatisierten Tools durchgeführt \cite{static}.
 
-\subsection*{Technologie Beispiele}
+\subsection*{Technologie Beispiele - Plain Output}
 
 Eine Technologie von Shepherd, Fry und Vijay-Shanker basiert auf der Analyse natürlicher Sprache in objektorientierten Programmen, wie zum Beispiel Methodennamen, Variablennamen oder Kommentare \cite{shepherd}. Dabei wird davon ausgegangen, dass Verben für Methodennamen stehen und Substantive für Objektnamen.
 
@@ -153,7 +153,30 @@ Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen
 \caption{Zusammensetzung der Such-Query für den AOIG}
 \end{table}
 
-% TODO Shao et al. [40]
+\subsection*{Technologie Beispiele - Guided Output}
+
+% technology: LSI
+%text docs for software elements
+%query
+%+
+Andrian Marcus hat unter anderem zusammen mit Andrey Sergeyev, Václav Rajlich und Jonathan I. Maletic als einer der ersten einen Ansatz für Feature Location vorgestellt, der auf \textit{Information Retrieval (IR)} basiert \cite{marcus1}\cite{marcus2}. Als Basis dienen Text-Dokumente, die bestimmte Softwareelemente wie zum Beispiel Methoden oder Datentypen beschreiben. Diese Dokumente werden domänenspezifisch durch Identifier (Methodennamen, Objektnamen, Klassennamen, etc.) und Kommentare erstellt. Hierbei werden die Identifier durch bekannte Code-Styles voneinander differenziert. Ein solcher Code-Style kann zum Beispiel das Teilen von Wörtern durch einen Unterstrich '\_' oder das Kleinschreiben von Methodennamen, bei denen die Folgewörter jedoch groß geschrieben werden (\textit{'updateMessageAndSendToReceiver'}), sein. Jedes Softwareelement wird dabei von einem Dokument beschrieben und mittels der Identifier in LSI Vektoren transformiert.
+
+Der Nutzer kann in natürlicher Sprache nach Features suchen. Bei jeder Suche wird anhand der Identifiers im Quelltext und der vom Nutzer erstellten Phrasen zum Beschreiben der Features Dokumente im LSI Raum erstellt. Diese Dokumente werden mit Hilfe von Ähnlichkeitsberechnungen zwischen der Query und den Dokumenten differenziert. Die Dokumente, die der Query am ähnlichsten sind, werden als Ergebnis der Suche zurückgegeben.
+
+Im folgenden Schritt kann der Nutzer die ihm präsentierten Ergebnisse bewerten und deren Tauglichkeit bestimmen. Falls weitere Dokumente gefunden werden, die in den Kontext der Suche passen, werden diese der Query hinzugefügt. Erst wenn keine weiteren relevanten Dokumente mehr gefunden werden, stoppt der Algorithmus. Das Ergebnis ist dann eine Menge von Dokumenten, die vom Nutzer als relevant angesehen werden und nach der Ähnlichkeitsberechnung des Algorithmus geordnet sind.
+
+% Shao et al. [40]
+% technology: LSI, PDA
+% call graph,
+% text docs for software elements
+% query
+% +
+
+Ein anderer Ansatz von Peng Shao erweitert den von Marcus et al. (\cite{marcus1}\cite{marcus2}), indem das LSI Ranking mit einem Ranking durch einen statischen Kontrollflußgraphen kombiniert wird \cite{shao}.
+
+Wie bereits oben beschrieben wird jede Methode des Programms durch ein Dokument mit den entsprechenden Identifiern beschrieben. Durch den LSI Algorithmus wird unter Berücksichtigung der Eingabe-Query das Ranking für jedes Dokument berechnet. Danach wird eine Menge der Methoden aus Dokumenten erstellt, die einen höheren Wert als ein bestimmter empirisch ermittelter Grenzwert im Ranking erreichen. Von diesen Methoden wird dann eine Menge der \textit{callers} und \textit{callees} erstellt.
+
+Die Methoden werden anhand der LSI Werte und der Werte des Rankings des Kontrollflußgraphen absteigend ausgegeben. Somit kombiniert dieser Ansatz beide Rankings und erhöht dadurch die Genauigkeit der Ausgabe.
 
 %Felix
 \subsection{Dynamische Feature Location Technologien}
@@ -214,6 +237,8 @@ Worin sich dynamische und statische Verfahren weiterhin unterscheiden ist die Vo
 \section{Fazit}
 Für welchen Zweck welches Analyseverfahren und welche Technologie
 Ergebnis wahrscheinlich: Alles gar nicht so schlecht, je nach Bedarf muss eine Technologie ausgewählt werden oder eventuell mit einer anderen kombiniert werden.
+
+Feature Location kann für tatsächliche Features und für Bugs verwendet werden, da diese ähnliche oder gleiche Eigenschaften aufweisen.
 
 
 
