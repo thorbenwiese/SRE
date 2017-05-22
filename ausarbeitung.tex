@@ -57,11 +57,13 @@ Bei der Entwicklung und Wartung von Software spielt die Identifikation des Nutze
 
 \section{Einleitung}
 
-In Bereich der Softwareentwicklung und der Wartung von Software kommt es immer wieder zu Änderungen im Code, die eine bestimmte Funktionalität verändern oder verbessern sollen. Das Finden dieser zu verändernden Code-Segmente ist insbesondere bei großen Projekten alles andere als trivial. Schlecht bis gar nicht dokumentierter Code und missachtete Design-Patterns stehen dabei an der Tagesordnung. Um dennoch möglichst zuverlässig die Abschnitte im Quelltext lokalisieren zu können, die zu einer bestimmten Funktionalität gehören, werden Techniken der sogenannten \textit{Feature Location} angewendet.
+In Bereich der Softwareentwicklung und der Wartung von Software kommt es immer wieder zu Änderungen im Code, die eine bestimmte Funktionalität verändern oder verbessern sollen. Das Finden dieser zu verändernden Code-Segmente ist insbesondere bei großen Projekten alles andere als trivial. Schlecht bis gar nicht dokumentierter Code und missachtete oder falsch umgesetzte Design und Architektur-Patterns stehen dabei an der Tagesordnung. Um dennoch möglichst zuverlässig die Abschnitte im Quelltext lokalisieren zu können, die zu einer bestimmten Funktionalität gehören, werden Techniken der sogenannten \textit{Feature Location} angewendet.
 
 Diese erlauben es dem Nutzer, nach bestimmten Mustern im Quelltext zu suchen und so einen geeigneten Einstiegspunkt in den Code zu finden. Dieser kann sowohl für eine Änderung des Designs oder des Codes im Sinne einer Wartungsaufgabe oder eines Change-Requests erfolgen, als auch bei einer Fehlermeldung schnell für einen Überblick der betroffenen Code-Abschnitte sorgen.
 
-Ziel dieser Seminararbeit ist es, die verschiedenen Analyseverfahren und Technologien zur Erkennung von Features im Code zu beschreiben und zu vergleichen.
+Es werden zwischen statischen und dynamischen Analysetechniken unterschieden, die einen Quelltext vor oder während der Laufzeit analysieren können. In den folgenden Abschnitten dieser Seminararbeit werden zunächst wichtige Begriffe definiert, dann verschiedene Analyseverfahren erläutert und anschließend Technologien vorgestellt, die mit Hilfe dieser Verfahren Features im Code lokalisieren.
+
+Ziel dieser Seminararbeit ist es, die verschiedenen Analyseverfahren und Technologien zur Erkennung von Features im Code zu beschreiben und zu vergleichen. Es wird weiterhin eine Empfehlungen gegeben, wann welche Techniken angewendet werden sollten.
 
 \section{Begriffe}
 
@@ -77,21 +79,17 @@ Der Prozess der Feature Location beschreibt die Identifikation der Beziehung zwi
 
 In diesem Abschnitt sollen verschiedene Analyseverfahren vorgestellt werden, die das Finden von Feature Locations ermöglichen.
 
-%Thorben
 \subsection*{Program Dependence Analysis (PDA)}\label{PDA}
 
 Die Analyse eines Programms auf interne Abhängigkeiten wird Abhängigkeitsanalyse (engl. Dependence Analysis) genannt. Sie umfasst in der Regel Kontrollflussabhängigkeiten und Datenabhängigkeiten innerhalb eines Programmes. Diese werden zur Übersetzungszeit mithilfe des Compilers festgestellt. Ziel dieser Analyse ist es zum Beispiel, zu überprüfen, ob ein Programm parallelisiert ausgeführt werden kann. Für die Analyse von Features im Quelltext ist diese Methode hilfreich, da durch sowohl Kontrollflussabhängigkeiten, als auch Datenabhängigkeiten auch semantische Verknüpfungen verschiedener Abschnitte des Codes hergestellt werden können \cite{PDA}.
 
-%Felix
 \subsection*{Trace Analysis}
 Bei der Trace Analysis findet eine Auswertung der Traces (Spuren) statt. Das Erstellen von Spuren ist eine Form des Loggings bei der das Verhalten eines Programms aufgezeichnet wird. Traces unterscheiden sich vom Logging dadurch, dass sie eher von Entwicklern als Administratoren verwendet werden und deutlich weniger abstrahieren sondern eine Menge Ausgabedaten auf niedrigen Ausführungsebenen liefern. Meistens werden mehrere Spuren verwendet, wobei es eine Spur sämtliche wichtigen Ereignisse aufzeichnet und die anderen diese komplexe, quantitativ auffallende Spur nach bestimmten Kriterien filtern. 
 
-%Thorben
 \subsection*{Latent Semantic Indexing (LSI)}
 
 Das Verfahren des Latent Semantix Indexing wird zum Indexieren von Abschnitten und Mustern eines Textes mithilfe von Singulärwertzerlegung der Ausdruck-Dokument-Matrix verwendet. Die Ausdruck-Dokument-Matrix (engl. Document-Term-Matrix) stellt die Frequenz der Ausdrücke innerhalb eines Dokumentes oder Textes dar. Die Singulärwertzerlegung dieser Matrix ist die Darstellung der ursprünglichen Matrix als Produkt dreier spezieller Matrizen, deren Singulärwerte auf bestimmte Eigenschaften der Matrix schließen lassen. LSI geht davon aus, dass Wörter, die in einem bestimmten Kontext verwendet werden, eine ähnliche Bedeutung haben. Dieses Verfahren lässt sich von natürlicher Sprache auch auf Quellcode übertragen, insbesondere auf Kommentare innerhalb des Codes \cite{LSI}.
 
-%Thorben
 \subsection{Statische Feature Location Technologien}
 
 In diesem Abschnitt sollen statische Technologien zum Finden von Features im Quelltext vorgestellt werden.
@@ -116,34 +114,34 @@ Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen
 
 \begin{table}[h]
 	\centering
-\begin{tabular}{|c|l|}
-	\hline
-	\hspace{0.1cm} \textbf{Schritt} \hspace{0.1cm} & \textbf{Zusammensetzung der Query}\\
-	\hline
-	1 & Abstrakte Suchquery, zB. 'Suche automatisch nach Entitäten'\\
-	\hline
-	2 & Konkrete Suchquery, zB. 'Suche Entitäten'\\
-	\hline
-	3 & Aufgeteilte Suchquery, zB.\\
-	& 'Verb: suchen'\\
-	& 'Objekt: Entität'\\
-	\hline
-	4 & Erste erweiterte Suchquery, zB.\\
-	& 'Verb: suchen, gesucht, gesuchte'\\
-	& 'Objekt: 'die Entität, alle Entitäten, erste Entität'\\
-	\hline
-	5 & Vorgeschlagene Erweiterungen der Suchquery, zB.\\
-	& 'Verb: absuchen, durchsuchen, aufspüren, stöbern, ...'\\
-	& \textit{Nutzer wählt aus}\\
-	& 'Objekt: 'Instanz, Objekt, Symbol, ...'\\
-	& \textit{Nutzer wählt aus}\\
-	\hline
-	6 & Wiederholung von Schritt 5 bis die Query ausreichend erweitert wurde\\
-	\hline
-\end{tabular}
-\label{query}
-\vspace{0.2cm}
-\caption{Zusammensetzung der Such-Query für den AOIG}
+	\begin{tabular}{|c|l|}
+		\hline
+		\hspace{0.1cm} \textbf{Schritt} \hspace{0.1cm} & \textbf{Zusammensetzung der Query}\\
+		\hline
+		1 & Abstrakte Suchquery, zB. 'Suche automatisch nach Entitäten'\\
+		\hline
+		2 & Konkrete Suchquery, zB. 'Suche Entitäten'\\
+		\hline
+		3 & Aufgeteilte Suchquery, zB.\\
+		& 'Verb: suchen'\\
+		& 'Objekt: Entität'\\
+		\hline
+		4 & Erste erweiterte Suchquery, zB.\\
+		& 'Verb: suchen, gesucht, gesuchte'\\
+		& 'Objekt: 'die Entität, alle Entitäten, erste Entität'\\
+		\hline
+		5 & Vorgeschlagene Erweiterungen der Suchquery, zB.\\
+		& 'Verb: absuchen, durchsuchen, aufspüren, stöbern, ...'\\
+		& \textit{Nutzer wählt aus}\\
+		& 'Objekt: 'Instanz, Objekt, Symbol, ...'\\
+		& \textit{Nutzer wählt aus}\\
+		\hline
+		6 & Wiederholung von Schritt 5 bis die Query ausreichend erweitert wurde\\
+		\hline
+	\end{tabular}
+	\label{query}
+	\vspace{0.2cm}
+	\caption{Zusammensetzung der Such-Query für den AOIG}
 \end{table}
 
 \subsection*{Technologie Beispiele - Guided Output}
@@ -222,7 +220,12 @@ Worin sich dynamische und statische Verfahren weiterhin unterscheiden, ist die V
 \section{Fazit}
 
 Für welchen Zweck welches Analyseverfahren und welche Technologie
-Ergebnis wahrscheinlich: Alles gar nicht so schlecht, je nach Bedarf muss eine Technologie ausgewählt werden oder eventuell mit einer anderen kombiniert werden.
+
+Kann man erst statisch suchen und dann nochmal dynamisch, um alle Bereiche abzudecken? Lohnt sich da der Aufwand?
+
+Je nach Bedarf muss eine Technologie ausgewählt werden oder eventuell mit einer anderen kombiniert werden..
+
+Trade-Off zwischen Genauigkeit und Relevanz des Outputs und Aufwand für den Nutzer (Guided Output vs. Plain Output?)
 
 Feature Location kann für tatsächliche Features und für Bugs verwendet werden, da diese ähnliche oder gleiche Eigenschaften aufweisen.
 
@@ -234,10 +237,10 @@ Feature Location kann für tatsächliche Features und für Bugs verwendet werden
 
 \clearpage
 
-\phantomsection % benötigt für korrekte pdf-darstellung
+\phantomsection
 \addcontentsline{toc}{section}{Literaturverzeichnis}
-\bibliographystyle{vancouver} % Din 1505 nach Lorenzen (Das konkrete Aussehen des Litverzeichnisses ist im header festgelegt)
+\bibliographystyle{vancouver}
 \setcitestyle{square}
-\bibliography{literatur}  % Pfad zur *.bib-Datei (Dateiendung wird weggelassen)
+\bibliography{literatur}
 
 \end{document}
