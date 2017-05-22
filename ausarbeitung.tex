@@ -57,9 +57,10 @@ Bei der Entwicklung und Wartung von Software spielt die Identifikation des Nutze
 
 \section{Einleitung}
 
-%TODO Am Ende schreiben?
-Die erste Quelle \cite{survey}.\\
-...\\
+In Bereich der Softwareentwicklung und der Wartung von Software kommt es immer wieder zu Änderungen im Code, die eine bestimmte Funktionalität verändern oder verbessern sollen. Das Finden dieser zu verändernden Code-Segmente ist insbesondere bei großen Projekten alles andere als trivial. Schlecht bis gar nicht dokumentierter Code und missachtete Design-Patterns stehen dabei an der Tagesordnung. Um dennoch möglichst zuverlässig die Abschnitte im Quelltext lokalisieren zu können, die zu einer bestimmten Funktionalität gehören, werden Techniken der sogenannten \textit{Feature Location} angewendet.
+
+Diese erlauben es dem Nutzer, nach bestimmten Mustern im Quelltext zu suchen und so einen geeigneten Einstiegspunkt in den Code zu finden. Dieser kann sowohl für eine Änderung des Designs oder des Codes im Sinne einer Wartungsaufgabe oder eines Change-Requests erfolgen, als auch bei einer Fehlermeldung schnell für einen Überblick der betroffenen Code-Abschnitte sorgen.
+
 Ziel dieser Seminararbeit ist es, die verschiedenen Analyseverfahren und Technologien zur Erkennung von Features im Code zu beschreiben und zu vergleichen.
 
 \section{Begriffe}
@@ -76,8 +77,6 @@ Der Prozess der Feature Location beschreibt die Identifikation der Beziehung zwi
 
 In diesem Abschnitt sollen verschiedene Analyseverfahren vorgestellt werden, die das Finden von Feature Locations ermöglichen.
 
-%\subsection*{Formal Concept Analysis (FCA)}
-
 %Thorben
 \subsection*{Program Dependence Analysis (PDA)}\label{PDA}
 
@@ -91,12 +90,6 @@ Bei der Trace Analysis findet eine Auswertung der Traces (Spuren) statt. Das Ers
 \subsection*{Latent Semantic Indexing (LSI)}
 
 Das Verfahren des Latent Semantix Indexing wird zum Indexieren von Abschnitten und Mustern eines Textes mithilfe von Singulärwertzerlegung der Ausdruck-Dokument-Matrix verwendet. Die Ausdruck-Dokument-Matrix (engl. Document-Term-Matrix) stellt die Frequenz der Ausdrücke innerhalb eines Dokumentes oder Textes dar. Die Singulärwertzerlegung dieser Matrix ist die Darstellung der ursprünglichen Matrix als Produkt dreier spezieller Matrizen, deren Singulärwerte auf bestimmte Eigenschaften der Matrix schließen lassen. LSI geht davon aus, dass Wörter, die in einem bestimmten Kontext verwendet werden, eine ähnliche Bedeutung haben. Dieses Verfahren lässt sich von natürlicher Sprache auch auf Quellcode übertragen, insbesondere auf Kommentare innerhalb des Codes \cite{LSI}.
-
-%\subsection*{Term Frequency - Inverse Document Frequency Matrix}
-
-%\subsection*{Hyper-link Induced Topic Search (HITS)}
-
-% technologies: PDA, LSI, Trace Analysis
 
 %Thorben
 \subsection{Statische Feature Location Technologien}
@@ -155,22 +148,11 @@ Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen
 
 \subsection*{Technologie Beispiele - Guided Output}
 
-% technology: LSI
-%text docs for software elements
-%query
-%+
 Andrian Marcus hat unter anderem zusammen mit Andrey Sergeyev, Václav Rajlich und Jonathan I. Maletic als einer der ersten einen Ansatz für Feature Location vorgestellt, der auf \textit{Information Retrieval (IR)} basiert \cite{marcus1}\cite{marcus2}. Als Basis dienen Text-Dokumente, die bestimmte Softwareelemente wie zum Beispiel Methoden oder Datentypen beschreiben. Diese Dokumente werden domänenspezifisch durch Identifier (Methodennamen, Objektnamen, Klassennamen, etc.) und Kommentare erstellt. Hierbei werden die Identifier durch bekannte Code-Styles voneinander differenziert. Ein solcher Code-Style kann zum Beispiel das Teilen von Wörtern durch einen Unterstrich '\_' oder das Kleinschreiben von Methodennamen, bei denen die Folgewörter jedoch groß geschrieben werden (\textit{'updateMessageAndSendToReceiver'}), sein. Jedes Softwareelement wird dabei von einem Dokument beschrieben und mittels der Identifier in LSI Vektoren transformiert.
 
 Der Nutzer kann in natürlicher Sprache nach Features suchen. Bei jeder Suche wird anhand der Identifiers im Quelltext und der vom Nutzer erstellten Phrasen zum Beschreiben der Features Dokumente im LSI Raum erstellt. Diese Dokumente werden mit Hilfe von Ähnlichkeitsberechnungen zwischen der Query und den Dokumenten differenziert. Die Dokumente, die der Query am ähnlichsten sind, werden als Ergebnis der Suche zurückgegeben.
 
 Im folgenden Schritt kann der Nutzer die ihm präsentierten Ergebnisse bewerten und deren Tauglichkeit bestimmen. Falls weitere Dokumente gefunden werden, die in den Kontext der Suche passen, werden diese der Query hinzugefügt. Erst wenn keine weiteren relevanten Dokumente mehr gefunden werden, stoppt der Algorithmus. Das Ergebnis ist dann eine Menge von Dokumenten, die vom Nutzer als relevant angesehen werden und nach der Ähnlichkeitsberechnung des Algorithmus geordnet sind.
-
-% Shao et al. [40]
-% technology: LSI, PDA
-% call graph,
-% text docs for software elements
-% query
-% +
 
 Ein anderer Ansatz von Peng Shao erweitert den von Marcus et al. (\cite{marcus1}\cite{marcus2}), indem das LSI Ranking mit einem Ranking durch einen statischen Kontrollflußgraphen kombiniert wird \cite{shao}.
 
@@ -181,60 +163,64 @@ Die Methoden werden anhand der LSI Werte und der Werte des Rankings des Kontroll
 %Felix
 \subsection{Dynamische Feature Location Technologien}
 
-
 \subsection*{Dynamische Analyse}
-Allgemein dynamische Analyse
-Hauptmerkmal der dynamischen Analyse ist ihre Durchführung während der Laufzeit eines Programms. Das bedeutet die Ausführung des Programms ist zwingend erforderlich und während der Laufzeit werden Informationen gesammelt um wahrscheinliche Features zu lokalisieren. Dabei können ausschließlich funktionale Features gefunden werden, da die dynamische Analysetechnik an eine eingeschränkte Sicht auf das Programm gebunden ist, die der Sicht des Anwenders entspricht. 
+
+Hauptmerkmal der dynamischen Analyse ist ihre Durchführung während der Laufzeit eines Programms. Das bedeutet, die Ausführung des Programms ist zwingend erforderlich und während der Laufzeit werden Informationen gesammelt, um wahrscheinliche Features zu lokalisieren. Dabei können ausschließlich funktionale Features gefunden werden, da die dynamische Analysetechnik an eine eingeschränkte Sicht auf das Programm gebunden ist, die der Sicht des Anwenders entspricht. 
 
 Ähnlich wie bei der statischen Analyse unterscheidet man zwischen Plain-Output-Techniken, bei denen mögliche, zu einem Feature gehörende, Quellcodebestandteile ungeordnet zurückgeliefert werden und Guided-Output-Techniken, bei denen die ausgegebenen Komponenten durch zusätzliche Informationen in Zusammenhang gebracht werden und ihr Kontext genauer erläutert wird. 
 
 \subsection*{Technologie Beispiel - Plain Output}
-In ihrer wissenschaftlichen Arbeit Location Program Features by using Execution Slices benutzen die Autoren W. Eric Wong, Swapna S. Gokhale, Joseph R. Horgan und Kishor S.Trivedi ein dynamisches Plain-Output-Verfahren zur Analyse von Code \cite{Executionslices}. Sie verwenden dabei Execution Slicing im Gegensatz zum Static Slicing. Beide 
-Techniken werden unter Program Slicing zusammengefasst.
 
-Slices können verschiedene Bestandteile eines Programms sein wie z.B. Code-Blöcke oder Kontrollstrukturen. Auch sogenannte c- und p-uses können Bestandteile einer Slice sein.\\ C- und p - uses beschreiben beide den Pfad einer Variable im Programmfluss ohne, dass die Variable verändert wird, wobei c-uses Variablen zur Berechnung dienen und p-uses-Variablen für eine Prädikat oder eine Entscheidung.
+In ihrer wissenschaftlichen Arbeit Location Program Features by using Execution Slices benutzen die Autoren W. Eric Wong, Swapna S. Gokhale, Joseph R. Horgan und Kishor S. Trivedi ein dynamisches Plain-Output-Verfahren zur Analyse von Code \cite{Executionslices}. Sie verwenden dabei Execution Slicing im Gegensatz zum Static Slicing. Beide Techniken werden unter Program Slicing zusammengefasst.
 
-Faktoren, wie Heuristiken, Test Cases, Detailgenauigkeit und Tool-Unterstützung sind ausschlaggebend für den Erfolg einer dynamischen Analysetechnik. Besonderem Augenmerk gilt dabei der Menge der Tests, die dem Programm als Eingabe übergeben werden. Die Autoren heben hervor wie wichtig die richtigen Testmengen sind und unterscheiden zwischen aufrufenden (invoking) tests, die sich explizit auf ein bestimmtes Feature und seine Funktionalität fokussieren und ausschließenden Tests, die alle anderen Test-Sets enthalten, die nicht auf das Feature fokussiert sind worunter aber auch die zu finden sind, welche das gesuchte Feature und weitere Komponenten umfassen d.h. Tests bei denen das Feature nur ein Bestandteil von vielen ist.
+Slices können verschiedene Bestandteile eines Programms sein wie z.B. Code-Blöcke oder Kontrollstrukturen. Auch sogenannte c- und p-uses können Bestandteile einer Slice sein.
 
-Eine für die Autoren erfolgreiche Herangehensweise war zuerst die Menge aller aufrufenden Tests bilden von denen einige auch die Funktionalität anderer Features testen. Dann bildet man die Menge aller ausschließenden Tests, wobei diese jedoch auch Abschnitte des Quellcodes enthalten können, die vom gesuchten Feature benutzt werden. Die Differenz der beiden ist die Teilmenge, die zur Lokalisierung des gesuchten Features genutzt wird.
+C- und p - uses beschreiben beide den Pfad einer Variable im Programmfluss ohne, dass die Variable verändert wird, wobei c-uses Variablen zur Berechnung dienen und p-uses-Variablen für eine Prädikat oder eine Entscheidung verwendet werden.
 
-Die aufrufenden Tests sollen sich dabei sehr stark unterscheiden, während die ausschließenden Tests sehr ähnlich sein sollen. Ohne Tool-Unterstützung wäre es sehr Aufwending Slices, die wie erwähnt aus Code-Blöcken, Kontrollstrukturen, c- oder p-uses bestehen, für jeden einzelnen Testfall zu sammeln. Die Autoren verwendeten deshalb xVue. Dieses Programm zählt für jeden Test wie oft die angegebenen execution slices verwendet wurden und ordnet dadurch jedem Test die dazugehörigen Slices zu. Weiterhin teilt es die Tests, sofern dies noch nicht geschehen ist, in aufrufende und ausschließenden Tests.
+Faktoren wie Heuristiken, Test Cases, Detailgenauigkeit und Tool-Unterstützung sind ausschlaggebend für den Erfolg einer dynamischen Analysetechnik. Besonderem Augenmerk gilt dabei der Menge der Tests, die dem Programm als Eingabe übergeben werden. Die Autoren heben hervor, wie wichtig die richtigen Testmengen sind und unterscheiden zwischen aufrufenden (invoking) Tests, die sich explizit auf ein bestimmtes Feature und seine Funktionalität konzentrieren und ausschließenden Tests, die alle anderen Test-Sets enthalten, die nicht auf das Feature fokussiert sind. Darunter sind auch die zu finden, die das gesuchte Feature und weitere Komponenten umfassen, d.h. Tests, bei denen das Feature nur ein Bestandteil von vielen ist.
 
-Die Autoren erläuterten das Verfahren an einer Fallstudie mit der wissenschaftlichen Software SHARPE, die aus 35 412 Zeilen C-Code besteht. Sie fokussierten sich auf 5 Features und sammelten aufrufende und ausschließende Tests mit dem heuristischen Verfahren, dass bereits beschrieben wurde. \\xVue lieferte im Bezug auf Code-Blöcke und Kontrollstrukturen als Slices gute Ergebnisse, was die Lokalisierung der Features im Code betraf. Die dann zurückgelieferten Ergebnisse wurden von Experten bezüglich SHARPE verifiziert. Die Zuordnung von p- und c-uses ließ sich nicht vollständig verifizieren, da die Software derart komplex ist, das selbst die Experten nicht sämtliche Ergebnisse nachvollziehen konnten.
+Eine für die Autoren erfolgreiche Herangehensweise war zuerst die Menge aller aufrufenden Tests zu bilden, von denen einige auch die Funktionalität anderer Features testen. Dann bildet man die Menge aller ausschließenden Tests, wobei diese jedoch auch Abschnitte des Quellcodes enthalten können, die vom gesuchten Feature benutzt werden. Die Differenz der beiden ist die Teilmenge, die zur Lokalisierung des gesuchten Features genutzt wird.
 
-Nach der Auswertung der Studie kamen die Autoren zu dem Schluss, dass die, auf
-execution slices basierende Methode als ein Einstiegspunkt für Feature Location genutzt werden kann und stellten ihre Eignung dieser Analysetechnik besonders für komplexe System fest in denen sich implementierte Features über mehrere Module erstrecken. Dennoch steht und fällt das Verfahren mit den Test-Mengen mit denen das Programm gestartet wird und die Autoren stellten die Vermutung auf, dass auch in ihrer Fallstudie nicht der gesamte relevante Code gefunden wurde bezüglich eines Features. Auch wenn die Verifizierung der c- und p-uses nicht vollständig durchgeführt werden konnte, waren die SHARPE-Experten doch überrascht über die Detailgenauigkeit mit der xVue Features lokalisiert hatte.
+Die aufrufenden Tests sollen sich dabei sehr stark unterscheiden, während die ausschließenden Tests sehr ähnlich sein sollen. Ohne Tool-Unterstützung wäre es sehr Aufwending, Slices, die wie erwähnt aus Code-Blöcken, Kontrollstrukturen, c- oder p-uses bestehen, für jeden einzelnen Testfall zu sammeln. Die Autoren verwendeten deshalb xVue. Dieses Programm zählt für jeden Test, wie oft die angegebenen execution slices verwendet wurden und ordnet dadurch jedem Test die dazugehörigen Slices zu. Weiterhin teilt es die Tests, sofern das noch nicht geschehen ist, in aufrufende und ausschließenden Tests.
 
-Die Autoren hoben auch die einfache Anwendung des Verfahrens hervor, denn die Berechnung der execution slices war ja durch das Tool vereinfacht und automatisiert worden. Einzig allein die aufrufenden und ausschließenden Tests mussten durch den Anwender definiert werden. Die Identifizierung von c- und p-uses bot den weiteren Vorteil, dass diese Information zur Code Coverage genutzt werden konnte. Das heuristische Verfahren zur Ermittlung der Test-Mengen, welches sie genutzt hatten bewerteten sie als nützlich für den untersuchten Code, doch generell müssen die Heuristiken jeweils an die Art der Implementation angepasst werden.
+Die Autoren erläuterten das Verfahren an einer Fallstudie mit der wissenschaftlichen Software SHARPE, die aus 35 412 Zeilen C-Code besteht. Sie fokussierten sich auf 5 Features und sammelten aufrufende und ausschließende Tests mit dem heuristischen Verfahren, das bereits beschrieben wurde.
 
-Die Autoren kommen zu dem Schluss, dass sich ihr Verfahren durchaus für die Lokalisierung von relevanten Code bezüglich eines Features eignet. Es ist besonders nützlich um in großen Code-Bereichen die relevanten Zeilen zu finden, die ein solches Feature implementieren. Dennoch hat das Verfahren die typische Schwäche der dynamischen Analyse: es ist schwierig alle Komponenten im Code, die einem Feature zuzuordnen sind, zu entdecken und die Wahrscheinlichkeit ist groß, dass einige Komponenten nicht entdeckt werden. Der große Vorteil der Methode besteht in der Tool-Unterstützung, wodurch sie sehr einfach durchzuführen ist. 
+xVue lieferte im Bezug auf Code-Blöcke und Kontrollstrukturen als Slices gute Ergebnisse, was die Lokalisierung der Features im Code betraf. Die dann zurückgelieferten Ergebnisse wurden von Experten bezüglich SHARPE verifiziert. Die Zuordnung von p- und c-uses ließ sich nicht vollständig verifizieren, da die Software derart komplex ist, das selbst die Experten nicht sämtliche Ergebnisse nachvollziehen konnten.
+
+Nach der Auswertung der Studie kamen die Autoren zu dem Schluss, dass die auf execution slices basierende Methode als ein Einstiegspunkt für Feature Location genutzt werden kann und stellten ihre Eignung dieser Analysetechnik besonders für komplexe System fest, in denen sich implementierte Features über mehrere Module erstrecken. Dennoch steht und fällt das Verfahren mit den Test-Mengen, mit denen das Programm gestartet wird und die Autoren stellten die Vermutung auf, dass auch in ihrer Fallstudie nicht der gesamte relevante Code bezüglich eines Features gefunden wurde. Auch wenn die Verifizierung der c- und p-uses nicht vollständig durchgeführt werden konnte, waren die SHARPE-Experten doch überrascht über die Detailgenauigkeit, mit der xVue Features lokalisiert hatte.
+
+Die Autoren hoben auch die einfache Anwendung des Verfahrens hervor, denn die Berechnung der execution slices war ja durch das Tool vereinfacht und automatisiert worden. Einzig allein die aufrufenden und ausschließenden Tests mussten durch den Anwender definiert werden. Die Identifizierung von c- und p-uses bot den weiteren Vorteil, dass diese Information zur Code Coverage genutzt werden konnte. Das heuristische Verfahren zur Ermittlung der Test-Mengen, welches sie genutzt hatten, bewerteten sie als nützlich für den untersuchten Code, doch generell müssen die Heuristiken jeweils an die Art der Implementation angepasst werden.
+
+Die Autoren kommen zu dem Schluss, dass sich ihr Verfahren durchaus für die Lokalisierung von relevantem Code bezüglich eines Features eignet. Es ist besonders nützlich, um in großen Code-Bereichen die relevanten Zeilen zu finden, die ein solches Feature implementieren. Dennoch hat das Verfahren die typische Schwäche der dynamischen Analyse: es ist schwierig, alle Komponenten im Code, die einem Feature zuzuordnen sind, zu entdecken und die Wahrscheinlichkeit ist groß, dass einige Komponenten nicht entdeckt werden. Der große Vorteil der Methode besteht in der Tool-Unterstützung, wodurch sie sehr einfach durchzuführen ist. 
 
 \subsection*{Technologie Beispiel - Guided Output}
+
 In dem Paper Feature Location via Information Retrieval based Filtering of a Single Scenario Execution Trace von Dapeng Liu, Andrian Marcus, Denys Poshyvanyk und Vaclav Rajlich werden die Techniken LSI und Execution-Trace-Analyse zusammen genutzt. 
 
 \subsection{Textuelle Feature Location Technologien}
+
 Allgemein textuelle Analyse, Tools beschreiben, Beispiele
 
 \section{Vergleich}
-Die statische Analyse untersucht den Quelltext vor der Ausführung und hat somit Zugriff auf sämtliche Bestandteile des Programms. Dadurch können Features
-jeglicher Art gefunden werden, seien sie nun funktional oder nicht nicht-funktional. Eine mehrmalige Wiederholung der statischen Analyse eines
+
+Die statische Analyse untersucht den Quelltext vor der Ausführung und hat somit Zugriff auf sämtliche Bestandteile des Programms. Dadurch können Features jeglicher Art gefunden werden, seien sie nun funktional oder nicht nicht-funktional. Eine mehrmalige Wiederholung der statischen Analyse eines
 Programms ist idempotent und liefert immer wieder das gleiche Ergebnis.
 
-Während also die statische Analyse einen größeren Feature-Raum untersuchen kann bezüglich ihrer Quantität und Diversität, ist die dynamische
-Analyse an das Programm zu Ausführung gebunden und damit auch an spezifische Eingabeparameter, die den Verlauf bestimmen. Somit kann das Auffinden
-von Features stark eingeschränkt sein und selbst ein gefundenes Feature lässt sich nur schwer generalisieren [20].
+Während also die statische Analyse einen größeren Feature-Raum bezüglich ihrer Quantität und Diversität untersuchen kann, ist die dynamische
+Analyse an das Programm zu Ausführung gebunden und damit auch an spezifische Eingabeparameter, die den Verlauf bestimmen. Somit kann das Auffinden von Features stark eingeschränkt sein und selbst ein gefundenes Feature lässt sich nur schwer generalisieren.
 
 Betrachtet man Verfahren zu statischen und dynamischen Analyse als binären Klassifikator, dann liefern statische Verfahren mit größerer 
 Wahrscheinlichkeit eine Menge false-positives. Diese resultieren nicht nur aus den quantitativ höheren Featureraum sondern auch aus
-der Feststellung, dass die Wahrscheinlichkeit eines gefundenen Features nie genau bestimmt sondern nur approximiert werden kann. Statische
+der Feststellung, dass die Wahrscheinlichkeit eines gefundenen Features nie genau bestimmt, sondern nur approximiert werden kann. Statische
 Verfahren finden also mit größerer Wahrscheinlichkeit Features, die eigentlich gar keine sind, die sogenannte Überapproximiation.
 
-Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, liefern dagegen mehr false-negatives. Existierende Features
-werden in diesem Fall nicht als solche erkannt und falsch klassifiziert was man als Unterapproximation bezeichnet.
+Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, liefern vermehrt false-negatives. Existierende Features
+werden in diesem Fall nicht als solche erkannt und falsch klassifiziert, was als Unterapproximation bezeichnet wird.
 
-Worin sich dynamische und statische Verfahren weiterhin unterscheiden ist die Vorarbeit, die bezüglich der Eingabedaten geleistet werden muss. Während statische Verfahren, wie bereits erwähnt, bei mehrmaliger Durchführung das gleiche Ergebnis liefern sollten, sind dynamische Verfahren nur so gut in der Identifizierung von Features im Quellcode wie die Eingabeparameter mit denen das Programm gestartet wird. Diese müssen mit verschiedenen Heuristiken genau evaluiert werden, da eine ungenaue Testmenge in völlig unbrauchbare Ausgaben münden kann. Es ist in dieser Hinsicht mehr Aufwand nötig als bei statischen Analyse und der Anwender, der die Testfälle auswählt, muss qualifiziert und erfahren sein.
+Worin sich dynamische und statische Verfahren weiterhin unterscheiden, ist die Vorarbeit, die bezüglich der Eingabedaten geleistet werden muss. Während statische Verfahren, wie bereits erwähnt, bei mehrmaliger Durchführung das gleiche Ergebnis liefern sollten, sind dynamische Verfahren nur so gut in der Identifizierung von Features im Quellcode wie die Eingabeparameter, mit denen das Programm gestartet wird. Diese müssen mit verschiedenen Heuristiken genau evaluiert werden, da eine ungenaue Testmenge in völlig unbrauchbare Ausgaben münden kann. Es ist in dieser Hinsicht aufwändiger als bei einer statischen Analyse und der Anwender, der die Testfälle auswählt, muss qualifiziert und erfahren sein.
 
 \section{Fazit}
+
 Für welchen Zweck welches Analyseverfahren und welche Technologie
 Ergebnis wahrscheinlich: Alles gar nicht so schlecht, je nach Bedarf muss eine Technologie ausgewählt werden oder eventuell mit einer anderen kombiniert werden.
 
