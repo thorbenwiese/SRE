@@ -90,7 +90,7 @@ Bei der Trace Analysis findet eine Auswertung der Traces (Spuren) statt. Das Ers
 
 Das Verfahren des Latent Semantix Indexing wird zum Indexieren von Abschnitten und Mustern eines Textes mithilfe von Singulärwertzerlegung der Ausdruck-Dokument-Matrix verwendet. Die Ausdruck-Dokument-Matrix (engl. Document-Term-Matrix) stellt die Frequenz der Ausdrücke innerhalb eines Dokumentes oder Textes dar. Die Singulärwertzerlegung dieser Matrix ist die Darstellung der ursprünglichen Matrix als Produkt dreier spezieller Matrizen, deren Singulärwerte auf bestimmte Eigenschaften der Matrix schließen lassen. LSI geht davon aus, dass Wörter, die in einem bestimmten Kontext verwendet werden, eine ähnliche Bedeutung haben. Dieses Verfahren lässt sich von natürlicher Sprache auch auf Quellcode übertragen, insbesondere auf Kommentare innerhalb des Codes \cite{LSI}.
 
-\subsection{Statische Feature Location Technologien}
+\subsection{Statische Feature Location Technologien}\label{static}
 
 Im folgenden Abschnitt sollen statische Technologien zum Finden von Features im Quelltext vorgestellt werden.
 
@@ -106,7 +106,7 @@ Das Ergebnis der Programmanalyse ist ein \textit{action-oriented identifier grap
 
 Ein AOIG hat weiterhin zwei unterschiedliche Kantentypen: die \textit{pairing edges} und \textit{use edges}, wobei erstere je ein Verb oder DO Knoten mit einem entsprechenden verb-DO Paar verbinden und letztere ein verb-DO Paar mit allen anderen Knoten verbindet, die es benutzt.
 
-Der Input des Algorithmus ist zunächst eine abstrakte Query, die dann in eine vom Nutzer formulierte Query als Menge von Verb-DO Paaren umformuliert wird. Diese Query soll etwaige interessante Features im Programm beschreiben, indem ausschließlich Verben und DOs aufgelistet werden. Diese werden anschließend vom Algorithmus um von den Wörtern abstammende Wörter erweitert. Im nächsten Schritt werden dem Nutzer Begriffe vorgeschlagen, die sich ähnlich sind. Solche Begriffe können zum Beispiel Synonyme oder umgangssprachliche Bedeutungen von Wörtern sein. Der Nutzer kann hier aus einer Liste von maximal zehn vorgeschlagener Wörter aussuchen, welche zusammen mit ihren abstammenden Wörtern der Query hinzugefügt werden. Ein detaillierter Ablauf des Algorithmus ist in Tabelle \ref{query} beschrieben.
+Der Input des Algorithmus ist zunächst eine abstrakte Query, die dann in eine vom Nutzer formulierte Query als Menge von Verb-DO Paaren umformuliert wird. Diese Query soll etwaige interessante Features im Programm beschreiben, indem ausschließlich Verben und DOs aufgelistet werden. Diese werden anschließend vom Algorithmus um von den Wörtern abstammende Wörter erweitert, das sogenannte \textit{stemming}. Im nächsten Schritt werden dem Nutzer Begriffe vorgeschlagen, die sich ähnlich sind. Solche Begriffe können zum Beispiel Synonyme oder umgangssprachliche Bedeutungen von Wörtern sein. Der Nutzer kann hier aus einer Liste von maximal zehn vorgeschlagener Wörter aussuchen, welche zusammen mit ihren abstammenden Wörtern der Query hinzugefügt werden. Ein detaillierter Ablauf des Algorithmus ist in Tabelle \ref{query} beschrieben.
 
 Das Erweitern der Query wird so lange vom Nutzer fortgeführt, bis dieser mit der Zusammensetzung zufrieden ist. Anschließend wird der AOIG nach allen Verb-DO Paaren abgesucht, die Wörter der Query enthalten. Es werden alle Methoden extrahiert, bei denen die gefundenen Paare verwendet werden. Zwischen diesen Methoden werden dann die Aufruf-Beziehungen untereinander mittels PDA analysiert (siehe Abschnitt \ref{PDA}).
 
@@ -201,7 +201,20 @@ In dem Paper Feature Location via Information Retrieval based Filtering of a Sin
 
 \subsection{Textuelle Feature Location Technologien}
 
-Allgemein textuelle Analyse, Tools beschreiben, Beispiele
+\subsection*{Textuelle Suche}
+
+Die Textuelle Suche nach Features im Quellcode eines Programms ist eine der ersten Ansätze der \textit{Feature Location}. Hierbei wird der Code als ein zusammenhängender Text oder in Form von mehreren Textdateien oder -abschnitten eingelesen und auf bestimmte Suchmuster überprüft. Meist findet bei der textuellen Suche eine Erweiterung der Sucheingabe statt, zum Beispiel in Form des in Abschnitt \ref{static} beschriebenen \textit{stemmings} oder durch die Verwendung von regulären Ausdrücken \cite{grep}.
+
+\subsection*{Technologie Beispiel - Textuelle Suche}
+
+Bei einem geringen Umfang des Programmcodes können für die Suche innerhalb des Codes einfache Tools wie zum Beispiel das Linux/Unix-Kommando \textit{grep} verwendet werden, das gegebene Texte oder Textdateien nach bestimmten eingegebenen Mustern absucht und diese ausgibt. Tools dieser Art können häufig mit regulären Ausdrücken verwendet werden, die die textuelle Suche erheblich mächtiger und vielseitiger machen.
+
+Bei einer größeren Menge an Lines of Code (LOC) eines Programms werden üblicherweise Methoden des \textit{Indexing and Searching} angewandt. Ein Tools, das mit dieser Methode arbeitet, ist das Feature Location And Textual Tracing Tool (FLOAT$^3$) \cite{textual}. Gesucht wird üblicherweise mit einer Suchquery. Die Indexierung des Codes besteht aus dem Erstellen von sogenannten Dokumenten für jede Methode oder jedes Feld im Code, das alle Wörter enthält, die in der Methode oder dem Datenfeld verwendet werden. Hierbei werden üblicherweise Füll- und Stoppwörter wie 'the' oder 'a' automatisch entfernt.
+ Zusätzlich wird das \textit{stemming} auf die Wörter in den Dokumenten angewandt und zusammengesetzte Wörter wie zum Beispiel \mbox{'updateMessageAndSendToReceiver'} werden in die einzelnen Bestandteile ohne Füllwörter zerlegt, in diesem Fall in 'update', 'message', 'send' und 'receiver'.
+ 
+ Die Query und jedes Dokument werden dann in einen Vektor konvertiert. Bei einer Suche wird dann der Query-Vektor mit den verschiedenen Dokumenten-Vektoren auf ihre Ähnlichkeit verglichen und ein Score bestimmt. Die Dokumente mit dem höchsten Score werden dann als bestes Suchergebnis vorgeschlagen.
+ 
+Mit diesem Verfahren können auch große Mengen an LOCs schnell und gut skalierbar durchsucht werden. Tools wie FLOAT$^3$ sind unter anderem auch als Plugin für verschiedene Entwicklungsumgebungen verfügbar und dadurch leicht zu integrieren.
 
 \section{Vergleich}
 
@@ -220,6 +233,8 @@ Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, lief
 werden in diesem Fall nicht als solche erkannt und falsch klassifiziert, was als Unterapproximation bezeichnet wird.
 
 Worin sich dynamische und statische Verfahren weiterhin unterscheiden, ist die Vorarbeit, die bezüglich der Eingabedaten geleistet werden muss. Während statische Verfahren, wie bereits erwähnt, bei mehrmaliger Durchführung das gleiche Ergebnis liefern sollten, sind dynamische Verfahren nur so gut in der Identifizierung von Features im Quellcode wie die Eingabeparameter, mit denen das Programm gestartet wird. Diese müssen mit verschiedenen Heuristiken genau evaluiert werden, da eine ungenaue Testmenge in völlig unbrauchbare Ausgaben münden kann. Es ist in dieser Hinsicht aufwändiger als bei einer statischen Analyse und der Anwender, der die Testfälle auswählt, muss qualifiziert und erfahren sein.
+
+\clearpage
 
 \section{Fazit}
 
