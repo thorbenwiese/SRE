@@ -67,7 +67,7 @@ Ziel dieser Seminararbeit ist es, die verschiedenen Analyseverfahren und Technol
 
 \section{Begriffe}
 
-Für die Vorstellung der Analyseverfahren sollen zunächst einige Begriffe definiert und erklärt werden.
+Für die Vorstellung der Analyseverfahren sollen zunächst der Begriff des \textit{Features} sowie der \textit{Feature Location} definiert und erklärt werden.
 
 \subsection*{Feature}
 Ein Feature ist ein Software Artefakt, das eine spezifische Funktionalität implementiert \cite{feature}. Diese Funktionalität wird in natürlicher Sprache beschrieben und wird von einem Programmabschnitt wiedergespiegelt. Ein Feature besteht üblicherweise aus einen Namen, einer Bedeutung (Intension) und einer Erweiterung (Extension) \cite{rajlich-chen}.
@@ -92,7 +92,7 @@ Das Verfahren des Latent Semantix Indexing wird zum Indexieren von Abschnitten u
 
 \subsection{Statische Feature Location Technologien}
 
-In diesem Abschnitt sollen statische Technologien zum Finden von Features im Quelltext vorgestellt werden.
+Im folgenden Abschnitt sollen statische Technologien zum Finden von Features im Quelltext vorgestellt werden.
 
 \subsection*{Statische Analyse}
 
@@ -111,6 +111,8 @@ Der Input des Algorithmus ist zunächst eine abstrakte Query, die dann in eine v
 Das Erweitern der Query wird so lange vom Nutzer fortgeführt, bis dieser mit der Zusammensetzung zufrieden ist. Anschließend wird der AOIG nach allen Verb-DO Paaren abgesucht, die Wörter der Query enthalten. Es werden alle Methoden extrahiert, bei denen die gefundenen Paare verwendet werden. Zwischen diesen Methoden werden dann die Aufruf-Beziehungen untereinander mittels PDA analysiert (siehe Abschnitt \ref{PDA}).
 
 Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen repräsentieren alle gefundenen Methoden und die Kanten deren strukturellen Beziehungen untereinander.
+
+Mit diesem Graphen können gesuchte Features anhand der Methoden lokalisiert werden. Durch die strukturellen Beziehungen zu anderen Methoden kann zusätzlich die Einbindung einer Funktion in den Quellcode erfasst werden, was das Verändern oder Warten dieser Funktionalität vereinfacht.
 
 \begin{table}[h]
 	\centering
@@ -146,7 +148,7 @@ Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen
 
 \subsection*{Technologie Beispiele - Guided Output}
 
-Andrian Marcus hat unter anderem zusammen mit Andrey Sergeyev, Václav Rajlich und Jonathan I. Maletic als einer der ersten einen Ansatz für Feature Location vorgestellt, der auf \textit{Information Retrieval (IR)} basiert \cite{marcus1}\cite{marcus2}. Als Basis dienen Text-Dokumente, die bestimmte Softwareelemente wie zum Beispiel Methoden oder Datentypen beschreiben. Diese Dokumente werden domänenspezifisch durch Identifier (Methodennamen, Objektnamen, Klassennamen, etc.) und Kommentare erstellt. Hierbei werden die Identifier durch bekannte Code-Styles voneinander differenziert. Ein solcher Code-Style kann zum Beispiel das Teilen von Wörtern durch einen Unterstrich '\_' oder das Kleinschreiben von Methodennamen, bei denen die Folgewörter jedoch groß geschrieben werden (\textit{'updateMessageAndSendToReceiver'}), sein. Jedes Softwareelement wird dabei von einem Dokument beschrieben und mittels der Identifier in LSI Vektoren transformiert.
+Andrian Marcus hat unter anderem zusammen mit Andrey Sergeyev, Václav \mbox{Rajlich} und Jonathan I. Maletic als einer der ersten einen Ansatz für Feature Location vorgestellt, der auf \textit{Information Retrieval (IR)} basiert \cite{marcus1}\cite{marcus2}. Als Basis dienen Text-Dokumente, die bestimmte Softwareelemente wie zum Beispiel Methoden oder Datentypen beschreiben. Diese Dokumente werden domänenspezifisch durch Identifier (Methodennamen, Objektnamen, Klassennamen, etc.) und Kommentare erstellt. Hierbei werden die Identifier durch bekannte Code-Styles voneinander differenziert. Ein solcher Code-Style kann zum Beispiel das Teilen von Wörtern durch einen Unterstrich '\_' oder das Kleinschreiben von Methodennamen, bei denen die Folgewörter jedoch groß geschrieben werden (zum Beispiel \textit{'updateMessageAndSendToReceiver'}), sein. Jedes Softwareelement wird dabei von einem Dokument beschrieben und mittels der Identifier in LSI Vektoren transformiert.
 
 Der Nutzer kann in natürlicher Sprache nach Features suchen. Bei jeder Suche wird anhand der Identifiers im Quelltext und der vom Nutzer erstellten Phrasen zum Beschreiben der Features Dokumente im LSI Raum erstellt. Diese Dokumente werden mit Hilfe von Ähnlichkeitsberechnungen zwischen der Query und den Dokumenten differenziert. Die Dokumente, die der Query am ähnlichsten sind, werden als Ergebnis der Suche zurückgegeben.
 
@@ -157,6 +159,8 @@ Ein anderer Ansatz von Peng Shao erweitert den von Marcus et al. (\cite{marcus1}
 Wie bereits oben beschrieben wird jede Methode des Programms durch ein Dokument mit den entsprechenden Identifiern beschrieben. Durch den LSI Algorithmus wird unter Berücksichtigung der Eingabe-Query das Ranking für jedes Dokument berechnet. Danach wird eine Menge der Methoden aus Dokumenten erstellt, die einen höheren Wert als ein bestimmter empirisch ermittelter Grenzwert im Ranking erreichen. Von diesen Methoden wird dann eine Menge der \textit{callers} und \textit{callees} erstellt.
 
 Die Methoden werden anhand der LSI Werte und der Werte des Rankings des Kontrollflußgraphen absteigend ausgegeben. Somit kombiniert dieser Ansatz beide Rankings und erhöht dadurch die Genauigkeit der Ausgabe.
+
+Durch die Kombination beider Verfahren können Features anhand der Dokumente identifiziert und deren Wirkungsweise mit Hilfe des Kontrollflußgraphen genauer erkannt werden.
 
 %Felix
 \subsection{Dynamische Feature Location Technologien}
@@ -219,15 +223,13 @@ Worin sich dynamische und statische Verfahren weiterhin unterscheiden, ist die V
 
 \section{Fazit}
 
-Für welchen Zweck welches Analyseverfahren und welche Technologie
+Das Lokalisieren von Features im Quellcode eines Programms stellt die Basis für Veränderungen oder Wartungsaufgaben an Programmen dar. Der Aufwand, die korrekten Abschnitte des Codes zu finden, kann unter Umständen erheblich sein. Dadurch wird die Wiederherstellung des Programmstatus in einen wartbaren und funktionierenden Zustand zunehmend erschwert oder verhindert.
 
-Kann man erst statisch suchen und dann nochmal dynamisch, um alle Bereiche abzudecken? Lohnt sich da der Aufwand?
+Um diesem Problem entgegenwirken zu können, werden verschiedene Techniken zur \textit{Feature Location} verwendet. Diese ermöglichen das statische oder dynamische Lokalisieren von Funktionen oder Methoden innerhalb des Codes.
 
-Je nach Bedarf muss eine Technologie ausgewählt werden oder eventuell mit einer anderen kombiniert werden..
+Hierbei stehen dem Anwender eine vielzahl unterschiedlicher Technologien zur Verfügung, die sich nicht pauschal vergleichen lassen. Die Frage, ob ein statisches oder dynamisches Verfahren verwendet werden sollte, hängt unter anderem davon ab, ob das Programm überhaupt ausführbar ist. Weiterhin unterscheiden sich viele Technologien hinsichtlich des Nutzeraufwandes oder der Art und Weise, wie eine Suchquery oder ähliches aufgebaut und spezifiziert werden kann. Hierbei entsteht unter Umständen ein Trade-Off zwischen der Genauigkeit oder Relevanz des Outputs und dem Aufwand für den Nutzer.
 
-Trade-Off zwischen Genauigkeit und Relevanz des Outputs und Aufwand für den Nutzer (Guided Output vs. Plain Output?)
-
-Feature Location kann für tatsächliche Features und für Bugs verwendet werden, da diese ähnliche oder gleiche Eigenschaften aufweisen.
+Letztendlich sollte die zu verwendende Technologie je nach Bedarf und Anforderungen ausgewählt oder mit anderen kombiniert werden.
 
 
 
