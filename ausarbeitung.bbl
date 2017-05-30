@@ -1,0 +1,89 @@
+\begin{thebibliography}{10}
+
+\bibitem{feature}
+IEEE. Std. 829;.
+\newblock Available from:
+  \url{https://standards.ieee.org/findstds/standard/829-2008.html}.
+
+\bibitem{rajlich-chen}
+Chen K, Rajlich V. Case Study of Feature Location Using Dependence Graph.
+\newblock Wayne State University Department of Computer Science;.
+\newblock Available from:
+  \url{http://www.cs.wayne.edu/~severe/publications/Chen.IWPC.2000.FeatureLocation.pdf}.
+
+\bibitem{survey}
+Rubin J, Chechik M.
+\newblock A Survey of Feature Location Techniques.
+\newblock University of Toronto, Department of Computer Science; 2013.
+
+\bibitem{PDA}
+Stafford J. A Formal, Language-Independent, and Compositional Approach to
+  Interprocedural Control Dependence Analysis.
+\newblock University of Colorado;.
+\newblock Available from:
+  \url{ftp://ftp.sei.cmu.edu/pub/jas/Stafford-thesis.pdf}.
+
+\bibitem{LSI}
+Deerwester S, Dumais S, Furnas G, Landauer T, Harshman R. Indexing by Latent
+  Semantic Analysis.
+\newblock University of Colorado;.
+\newblock Available from:
+  \url{http://lsa.colorado.edu/papers/JASIS.lsi.90.pdf}.
+
+\bibitem{static}
+{Open Web Application Security Project (OWASP)}. Static Code Analysis.
+\newblock Open Web Application Security Project (OWASP);.
+\newblock Available from:
+  \url{https://www.owasp.org/index.php/Static_Code_Analysis}.
+
+\bibitem{shepherd}
+David~Shepherd EHLP Zachary~Fry, Vijay-Shanker K. Using Natural Language
+  Program Analysis to Locate and Understand Action-Oriented Concerns.
+\newblock University of Delaware;.
+\newblock Available from:
+  \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.136.4512&rep=rep1&type=pdf}.
+
+\bibitem{marcus1}
+Marcus A. Semantic Driven Program Analysis.
+\newblock Wayne State University;.
+\newblock Available from:
+  \url{http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=1357837}.
+
+\bibitem{marcus2}
+Marcus A, Sergeyev A, Rajlich V, Maletic J. An Information Retrieval Approach
+  to Concept Location in Source Code.
+\newblock Wayne State University, Kent State University;.
+\newblock Available from:
+  \url{https://pdfs.semanticscholar.org/a252/07e1b93fb57ba017c846c858f665dda0eecd.pdf}.
+
+\bibitem{shao}
+Peng~Shao RS. Feature Location by IR Modules and Call Graph.
+\newblock University of Alabama;.
+\newblock Available from:
+  \url{http://delivery.acm.org/10.1145/1570000/1566539/a70-shao.pdf?ip=134.100.5.65&id=1566539&acc=ACTIVE%20SERVICE&key=2BA2C432AB83DA15%2EBB626F2563133BE7%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&CFID=939130543&CFTOKEN=24947363&__acm__=1495374196_a0b456fb5b027e3daa05c1d361fad2e4}.
+
+\bibitem{Executionslices}
+Wong WE, Gokhale SS, und Kishor S~Trivedi JRH. Location Program Features by
+  using Execution Slices.
+\newblock University of California;.
+\newblock Available from:
+  \url{https://www.researchgate.net/profile/Kishor_Trivedi2/publication/3795664_Locating_Program_Features_by_using_Execution_Slices/links/0fcfd50dc6cac8f70e000000/Locating-Program-Features-by-using-Execution-Slices.pdf}.
+
+\bibitem{DynmicGuided}
+Liu D, Marcus A, Poshyvanyk D, Rajlich V. Feature Location via Information
+  Retrieval based Filtering of a Single Scenario Execution Trace.
+\newblock Wayne State University;.
+\newblock Available from:
+  \url{http://www.cs.wm.edu/~denys/pubs/LiuMarPosRaj.SITIR.ASE07.pdf}.
+
+\bibitem{grep}
+{William E  Shotts, Jr }. Grep Manual Page.
+\newblock www.linuxcommand.org;.
+\newblock Available from: \url{http://linuxcommand.org/man_pages/grep1.html}.
+
+\bibitem{textual}
+Trevor~Savage DP Meghan~Revelle. FLAT$^3$: Feature Location and Textual Tracing
+  Tool.
+\newblock College of William and Mary Department of Computer Science;.
+
+\end{thebibliography}
