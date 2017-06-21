@@ -1,21 +1,3 @@
-
-%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% This is the LaTeX source for the instructions to authors using
-% the LaTeX document class 'llncs.cls' for contributions to
-% the Lecture Notes in Computer Sciences series.
-% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
-%
-% It may be used as a template for your own input - copy it
-% to a new file with a new name and use it as the basis
-% for your article.
-%
-% NB: the document class 'llncs' has its own and detailed documentation, see
-% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \documentclass[runningheads,a4paper]{llncs}
 
 \usepackage{amssymb}
@@ -34,15 +16,17 @@
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
 \noindent\keywordname\enspace\ignorespaces#1}
 
+\usepackage{acronym}
+
 \begin{document}
 
 \title{Einstiegspunkte für Design und Codierung \\bei einer Wartungsaufgabe oder Fehlermeldung}
 
 \titlerunning{Einstiegspunkte für Design und Codierung}
 
-\author{}%Felix Fröhlich \and Thorben Wiese}
+\author{Felix Fröhlich \and Thorben Wiese}
 
-\authorrunning{}%Felix Fröhlich \and Thorben Wiese}
+\authorrunning{Felix Fröhlich \and Thorben Wiese}
 
 \institute{Universität Hamburg \\
 Fakultät für Mathematik,\\
@@ -57,11 +41,11 @@ Bei der Entwicklung und Wartung von Software spielt die Identifikation des Nutze
 
 \section{Einleitung}
 
-In Bereich der Softwareentwicklung und der Wartung von Software kommt es immer wieder zu Änderungen im Code, die eine bestimmte Funktionalität verändern oder verbessern sollen. Das Finden dieser zu verändernden Code-Segmente ist insbesondere bei großen Projekten alles andere als trivial. Schlecht bis gar nicht dokumentierter Code und missachtete oder falsch umgesetzte Design und Architektur-Patterns stehen dabei an der Tagesordnung. Um dennoch möglichst zuverlässig die Abschnitte im Quelltext lokalisieren zu können, die zu einer bestimmten Funktionalität gehören, werden Techniken der sogenannten \textit{Feature Location} angewendet.
+In dem Bereich der Softwareentwicklung und der Wartung von Software kommt es immer wieder zu Änderungen im Code, die eine bestimmte Funktionalität verändern oder verbessern sollen. Das Finden dieser zu verändernden Code-Segmente ist insbesondere bei großen Projekten alles andere als trivial. Schlecht bis gar nicht dokumentierter Code und missachtete oder falsch umgesetzte Architektur und Design-Patterns stehen dabei an der Tagesordnung \cite{survey}. Um dennoch möglichst zuverlässig die Abschnitte im Quelltext lokalisieren zu können, die zu einer bestimmten Funktionalität gehören, werden Techniken der sogenannten \textit{Feature Location} angewendet.
 
 Diese erlauben es dem Nutzer, nach bestimmten Mustern im Quelltext zu suchen und so einen geeigneten Einstiegspunkt in den Code zu finden. Dieser kann sowohl für eine Änderung des Designs oder des Codes im Sinne einer Wartungsaufgabe oder eines Change-Requests erfolgen, als auch bei einer Fehlermeldung schnell für einen Überblick der betroffenen Code-Abschnitte sorgen.
 
-Es werden zwischen statischen und dynamischen Analysetechniken unterschieden, die einen Quelltext vor oder während der Laufzeit analysieren können. In den folgenden Abschnitten dieser Seminararbeit werden zunächst wichtige Begriffe definiert, dann verschiedene Analyseverfahren erläutert und anschließend Technologien vorgestellt, die mit Hilfe dieser Verfahren Features im Code lokalisieren.
+Es werden zwischen statischen und dynamischen Analysetechniken unterschieden, die einen Quelltext vor oder während der Laufzeit analysieren können. In den folgenden Abschnitten dieser Seminararbeit werden zunächst wichtige Begriffe definiert, dann verschiedene Analyseverfahren erläutert und anschließend Technologien vorgestellt, die mit Hilfe dieser Verfahren Features im Code lokalisieren. Abschließend werden sowohl die Analyseverfahren als auch die vorgestellten Beispiele miteinander verglichen und in einem Fazit zusammengefasst.
 
 Ziel dieser Seminararbeit ist es, die verschiedenen Analyseverfahren und Technologien zur Erkennung von Features im Code zu beschreiben und zu vergleichen. Es wird weiterhin eine Empfehlungen gegeben, wann welche Techniken angewendet werden sollten.
 
@@ -70,7 +54,7 @@ Ziel dieser Seminararbeit ist es, die verschiedenen Analyseverfahren und Technol
 Für die Vorstellung der Analyseverfahren sollen zunächst der Begriff des \textit{Features} sowie der \textit{Feature Location} definiert und erklärt werden.
 
 \subsection*{Feature}
-Ein Feature ist ein Software Artefakt, das eine spezifische Funktionalität implementiert \cite{feature}. Diese Funktionalität wird in natürlicher Sprache beschrieben und wird von einem Programmabschnitt wiedergespiegelt. Ein Feature besteht üblicherweise aus einen Namen, einer Bedeutung (Intension) und einer Erweiterung (Extension) \cite{rajlich-chen}.
+Ein Feature ist ein Software Artefakt, das eine spezifische Funktionalität implementiert \cite{feature}. Diese Funktionalität wird in natürlicher Sprache beschrieben und von einem Programmabschnitt wiedergespiegelt. Ein Feature besteht üblicherweise aus einen Namen, einer Bedeutung (Intension) und einer Erweiterung (Extension) \cite{rajlich-chen}.
 
 \subsection*{Feature Location}
 Der Prozess der Feature Location beschreibt die Identifikation der Beziehung zwischen Features und deren Implementierung. Dabei liegt die Beschreibung des Features in natürlicher Sprache vor, die dann einem entsprechenden Codeabschnitt zugeordnet werden soll (Mapping) \cite{survey}.
@@ -79,36 +63,41 @@ Der Prozess der Feature Location beschreibt die Identifikation der Beziehung zwi
 
 In diesem Abschnitt sollen verschiedene Analyseverfahren vorgestellt werden, die das Finden von Feature Locations ermöglichen.
 
-\subsection*{Program Dependence Analysis (PDA)}\label{PDA}
+\subsection*{\ac{PDA}}\label{PDA}
 
-Die Analyse eines Programms auf interne Abhängigkeiten wird Abhängigkeitsanalyse (engl. Dependence Analysis) genannt. Sie umfasst in der Regel Kontrollflussabhängigkeiten und Datenabhängigkeiten innerhalb eines Programmes. Diese werden zur Übersetzungszeit mithilfe des Compilers festgestellt. Ziel dieser Analyse ist es zum Beispiel, zu überprüfen, ob ein Programm parallelisiert ausgeführt werden kann. Für die Analyse von Features im Quelltext ist diese Methode hilfreich, da durch sowohl Kontrollflussabhängigkeiten, als auch Datenabhängigkeiten auch semantische Verknüpfungen verschiedener Abschnitte des Codes hergestellt werden können \cite{PDA}.
+Die Analyse eines Programms auf interne Abhängigkeiten wird Abhängigkeits-analyse (engl. Dependence Analysis) genannt. Sie umfasst in der Regel Kontrollflussabhängigkeiten und Datenabhängigkeiten innerhalb eines Programmes. Diese werden zur Übersetzungszeit mithilfe des Compilers festgestellt. Ziel dieser Analyse ist es zum Beispiel, zu überprüfen, ob ein Programm parallelisiert ausgeführt werden kann. Für die Analyse von Features im Quelltext ist diese Methode hilfreich, da durch sowohl Kontrollflussabhängigkeiten, als auch Datenabhängigkeiten semantische Verknüpfungen verschiedener Abschnitte des Codes hergestellt werden können \cite{PDA}.
 
 \subsection*{Trace Analysis}
-Bei der Trace Analysis findet eine Auswertung der Traces (Spuren) statt. Das Erstellen von Spuren ist eine Form des Loggings bei der das Verhalten eines Programms aufgezeichnet wird. Traces unterscheiden sich vom Logging dadurch, dass sie eher von Entwicklern als Administratoren verwendet werden und deutlich weniger abstrahieren sondern eine Menge Ausgabedaten auf niedrigen Ausführungsebenen liefern. Meistens werden mehrere Spuren verwendet, wobei es eine Spur sämtliche wichtigen Ereignisse aufzeichnet und die anderen diese komplexe, quantitativ auffallende Spur nach bestimmten Kriterien filtern. 
 
-\subsection*{Latent Semantic Indexing (LSI)}
+Bei der Trace Analysis findet eine Auswertung der Spuren (Traces) statt. Das Erstellen von Spuren ist eine Form des Loggings, bei der das Verhalten eines Programms aufgezeichnet wird. Spuren unterscheiden sich vom Logging dadurch, dass sie eher von Entwicklern als Administratoren verwendet werden. Weiterhin abstrahieren sie weniger, sondern geben eine Menge Ausgabedaten auf niedrigen Ausführungsebenen aus. Meistens werden mehrere Spuren verwendet, wobei eine Spur sämtliche wichtigen Ereignisse aufzeichnet und die anderen diese komplexe, quantitativ auffallende Leitspur nach bestimmten Kriterien filtern.
 
-Das Verfahren des Latent Semantix Indexing wird zum Indexieren von Abschnitten und Mustern eines Textes mithilfe von Singulärwertzerlegung der Ausdruck-Dokument-Matrix verwendet. Die Ausdruck-Dokument-Matrix (engl. Document-Term-Matrix) stellt die Frequenz der Ausdrücke innerhalb eines Dokumentes oder Textes dar. Die Singulärwertzerlegung dieser Matrix ist die Darstellung der ursprünglichen Matrix als Produkt dreier spezieller Matrizen, deren Singulärwerte auf bestimmte Eigenschaften der Matrix schließen lassen. LSI geht davon aus, dass Wörter, die in einem bestimmten Kontext verwendet werden, eine ähnliche Bedeutung haben. Dieses Verfahren lässt sich von natürlicher Sprache auch auf Quellcode übertragen, insbesondere auf Kommentare innerhalb des Codes \cite{LSI}.
+\subsection*{\ac{LSI}}
+
+Das Verfahren des Latent Semantix Indexing wird zum Indexieren von Abschnitten und Mustern eines Textes mithilfe von Singulärwertzerlegung der Ausdruck-Dokument-Matrix verwendet. Die Ausdruck-Dokument-Matrix (engl. Document-Term-Matrix) stellt die Frequenz der Ausdrücke innerhalb eines Dokumentes oder Textes dar. Die Singulärwertzerlegung dieser Matrix ist die Darstellung der ursprünglichen Matrix als Produkt dreier spezieller Matrizen, deren Singulärwerte auf bestimmte Eigenschaften der Matrix schließen lassen. \ac{LSI} geht davon aus, dass Wörter, die in einem bestimmten Kontext verwendet werden, eine ähnliche Bedeutung haben. Dieses Verfahren lässt sich von natürlicher Sprache auch auf Quellcode übertragen, insbesondere auf Kommentare innerhalb des Codes \cite{LSI}.
+
+\subsection*{Output}
+
+Die Ausgabe des Ergebnisses der im nächsten Kapitel genauer erklärten statischen und dynamischen Analyse wird in Plain-Output und Guided-Output differenziert. Bei Plain-Output-Techniken werden mögliche, zu einem Feature gehörende, Quellcodebestandteile ungeordnet zurückgeliefert. Guided-Output-Techniken hingegen zeichnen sich dadurch aus, dass die ausgegebenen Komponenten durch zusätzliche Informationen in Zusammenhang gebracht werden und ihr Kontext genauer erläutert wird.
 
 \subsection{Statische Feature Location Technologien}\label{static}
 
-Im folgenden Abschnitt sollen statische Technologien zum Finden von Features im Quelltext vorgestellt werden.
+Im folgenden Abschnitt sollen statische Technologien zum Finden von Features im Quelltext vorgestellt werden. Nach der Definition einer statischen Analyse stellen wir ein Beispiel zu einer Plain-Output-Technologie, sowie zwei Beispiele zu Guided-Output-Technologien vor.
 
 \subsection*{Statische Analyse}
 
-Die Analyse von Quelltext zu einem Zeitpunkt, bei dem das Programm kompiliert wird und noch nicht ausgeführt wurde, wird statische Analyse genannt. Hierbei werden mithilfe von zum Beispeil Datenfluss-Analyse und Kontrollgraphen alle Abhängigkeiten und Funktionsaufrufe innerhalb des Codes analysiert und es können unter anderem Fehler wie zum Beispiel Race-Conditions oder Buffer-Overflows identifiziert werden. Dieser Prozess wird häufig von automatisierten Tools durchgeführt \cite{static}.
+Die Analyse von Quelltext zu einem Zeitpunkt, bei dem das Programm kompiliert wird und noch nicht ausgeführt wurde, wird statische Analyse genannt. Hierbei werden mithilfe von zum Beispeil Datenfluss-Analyse und Kontrollgraphen alle Abhängigkeiten und Funktionsaufrufe innerhalb des Codes analysiert. Dabei können unter anderem Fehler wie zum Beispiel Race-Conditions oder Buffer-Overflows identifiziert werden. Dieser Prozess wird häufig von automatisierten Tools durchgeführt \cite{static}.
 
 \subsection*{Technologie Beispiele - Plain Output}
 
 Eine Technologie von Shepherd, Fry und Vijay-Shanker basiert auf der Analyse natürlicher Sprache in objektorientierten Programmen, wie zum Beispiel Methodennamen, Variablennamen oder Kommentare \cite{shepherd}. Dabei wird davon ausgegangen, dass Verben für Methodennamen stehen und Substantive für Objektnamen.
 
-Das Ergebnis der Programmanalyse ist ein \textit{action-oriented identifier graph model (AOIG)}, wobei eine \textit{action} zum Beispiel ein Verb bzw. Methode sein kann, das auf einem Substantiv bzw. Objekt ausgeführt wird. In einem AOIG können vier verschiedene Knotentypen auftreten: \textit{verb nodes, direct-object nodes (DO), verb-DO nodes} und \textit{use nodes}. Die \textit{verb nodes} entsprechen den Methoden in einem Programm, die \textit{direct-object nodes} den Objekten, die \textit{verb-DO nodes} einem Paar aus Methode und Objekt, die zusammen gehören und die \textit{used nodes} jeweils einem verb-DO Paar, das in einem Kommentar oder im Quelltext auftritt.
+Das Ergebnis der Programmanalyse ist ein \textit{\ac{AOIG}}, wobei eine \textit{action} zum Beispiel ein Verb bzw. Methode sein kann, das auf einem Substantiv bzw. Objekt ausgeführt wird. In einem \ac{AOIG} können vier verschiedene Knotentypen auftreten: \textit{verb nodes, \acp{DO}, verb-DO nodes} und \textit{use nodes}. Die \textit{verb nodes} entsprechen den Methoden in einem Programm, die \textit{direct-object nodes} den Objekten, die \textit{verb-DO nodes} einem Paar aus Methode und Objekt, die zusammen gehören und die \textit{use nodes} jeweils einem verb-DO Paar, das in einem Kommentar oder im Quelltext auftritt.
 
-Ein AOIG hat weiterhin zwei unterschiedliche Kantentypen: die \textit{pairing edges} und \textit{use edges}, wobei erstere je ein Verb oder DO Knoten mit einem entsprechenden verb-DO Paar verbinden und letztere ein verb-DO Paar mit allen anderen Knoten verbindet, die es benutzt.
+Ein \ac{AOIG} hat weiterhin zwei unterschiedliche Kantentypen: die \textit{pairing edges} und \textit{use edges}, wobei erstere je ein Verb oder \ac{DO} Knoten mit einem entsprechenden verb-DO Paar verbinden und letztere ein verb-DO Paar mit allen anderen Knoten verbindet, die es benutzt.
 
-Der Input des Algorithmus ist zunächst eine abstrakte Query, die dann in eine vom Nutzer formulierte Query als Menge von Verb-DO Paaren umformuliert wird. Diese Query soll etwaige interessante Features im Programm beschreiben, indem ausschließlich Verben und DOs aufgelistet werden. Diese werden anschließend vom Algorithmus um von den Wörtern abstammende Wörter erweitert, das sogenannte \textit{stemming}. Im nächsten Schritt werden dem Nutzer Begriffe vorgeschlagen, die sich ähnlich sind. Solche Begriffe können zum Beispiel Synonyme oder umgangssprachliche Bedeutungen von Wörtern sein. Der Nutzer kann hier aus einer Liste von maximal zehn vorgeschlagener Wörter aussuchen, welche zusammen mit ihren abstammenden Wörtern der Query hinzugefügt werden. Ein detaillierter Ablauf des Algorithmus ist in Tabelle \ref{query} beschrieben.
+Der Input des Algorithmus ist zunächst eine abstrakte Query, die dann in eine vom Nutzer formulierte Query als Menge von Verb-DO Paaren umformuliert wird. Diese Query soll etwaige interessante Features im Programm beschreiben, indem ausschließlich Verben und \acp{DO} aufgelistet werden. Diese werden anschließend vom Algorithmus um von den Wörtern abstammende Wörter erweitert, das sogenannte \textit{stemming}. Im nächsten Schritt werden dem Nutzer Begriffe vorgeschlagen, die sich ähnlich sind. Solche Begriffe können zum Beispiel Synonyme oder umgangssprachliche Bedeutungen von Wörtern sein. Der Nutzer kann hier aus einer Liste von maximal zehn vorgeschlagener Wörter aussuchen, welche zusammen mit ihren abstammenden Wörtern der Query hinzugefügt werden. Ein detaillierter Ablauf des Algorithmus ist in Tabelle \ref{query} auf Seite \pageref{query} beschrieben.
 
-Das Erweitern der Query wird so lange vom Nutzer fortgeführt, bis dieser mit der Zusammensetzung zufrieden ist. Anschließend wird der AOIG nach allen Verb-DO Paaren abgesucht, die Wörter der Query enthalten. Es werden alle Methoden extrahiert, bei denen die gefundenen Paare verwendet werden. Zwischen diesen Methoden werden dann die Aufruf-Beziehungen untereinander mittels PDA analysiert (siehe Abschnitt \ref{PDA}).
+Das Erweitern der Query wird so lange vom Nutzer fortgeführt, bis dieser mit der Zusammensetzung zufrieden ist. Anschließend wird der \ac{AOIG} nach allen Verb-DO Paaren abgesucht, die Wörter der Query enthalten. Es werden alle Methoden extrahiert, bei denen die gefundenen Paare verwendet werden. Zwischen diesen Methoden werden dann die Aufruf-Beziehungen untereinander mittels \ac{PDA} analysiert (siehe Abschnitt \ref{PDA}).
 
 Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen repräsentieren alle gefundenen Methoden und die Kanten deren strukturellen Beziehungen untereinander.
 
@@ -120,19 +109,19 @@ Mit diesem Graphen können gesuchte Features anhand der Methoden lokalisiert wer
 		\hline
 		\hspace{0.1cm} \textbf{Schritt} \hspace{0.1cm} & \textbf{Zusammensetzung der Query}\\
 		\hline
-		1 & Abstrakte Suchquery, zB. 'Suche automatisch nach Entitäten'\\
+		1 & Abstrakte Suchquery, zum Beispiel 'Suche automatisch nach Entitäten'\\
 		\hline
-		2 & Konkrete Suchquery, zB. 'Suche Entitäten'\\
+		2 & Konkrete Suchquery, zum Beispiel 'Suche Entitäten'\\
 		\hline
-		3 & Aufgeteilte Suchquery, zB.\\
+		3 & Aufgeteilte Suchquery, zum Beispiel\\
 		& 'Verb: suchen'\\
 		& 'Objekt: Entität'\\
 		\hline
-		4 & Erste erweiterte Suchquery, zB.\\
+		4 & Erste erweiterte Suchquery, zum Beispiel\\
 		& 'Verb: suchen, gesucht, gesuchte'\\
 		& 'Objekt: 'die Entität, alle Entitäten, erste Entität'\\
 		\hline
-		5 & Vorgeschlagene Erweiterungen der Suchquery, zB.\\
+		5 & Vorgeschlagene Erweiterungen der Suchquery, zum Beispiel\\
 		& 'Verb: absuchen, durchsuchen, aufspüren, stöbern, ...'\\
 		& \textit{Nutzer wählt aus}\\
 		& 'Objekt: 'Instanz, Objekt, Symbol, ...'\\
@@ -141,77 +130,78 @@ Mit diesem Graphen können gesuchte Features anhand der Methoden lokalisiert wer
 		6 & Wiederholung von Schritt 5 bis die Query ausreichend erweitert wurde\\
 		\hline
 	\end{tabular}
-	\label{query}
 	\vspace{0.2cm}
-	\caption{Zusammensetzung der Such-Query für den AOIG}
+	\caption{Zusammensetzung der Such-Query für den \ac{AOIG}}
+	\label{query}
 \end{table}
 
 \subsection*{Technologie Beispiele - Guided Output}
 
-Andrian Marcus hat unter anderem zusammen mit Andrey Sergeyev, Václav \mbox{Rajlich} und Jonathan I. Maletic als einer der ersten einen Ansatz für Feature Location vorgestellt, der auf \textit{Information Retrieval (IR)} basiert \cite{marcus1}\cite{marcus2}. Als Basis dienen Text-Dokumente, die bestimmte Softwareelemente wie zum Beispiel Methoden oder Datentypen beschreiben. Diese Dokumente werden domänenspezifisch durch Identifier (Methodennamen, Objektnamen, Klassennamen, etc.) und Kommentare erstellt. Hierbei werden die Identifier durch bekannte Code-Styles voneinander differenziert. Ein solcher Code-Style kann zum Beispiel das Teilen von Wörtern durch einen Unterstrich '\_' oder das Kleinschreiben von Methodennamen, bei denen die Folgewörter jedoch groß geschrieben werden (zum Beispiel \textit{'updateMessageAndSendToReceiver'}), sein. Jedes Softwareelement wird dabei von einem Dokument beschrieben und mittels der Identifier in LSI Vektoren transformiert.
+Andrian Marcus hat unter anderem zusammen mit Andrey Sergeyev, Václav \mbox{Rajlich} und Jonathan I. Maletic als einer der ersten einen Ansatz für Feature Location vorgestellt, der auf \textit{\ac{IR}} basiert \cite{marcus1}\cite{marcus2}. Als Basis dienen Text-Dokumente, die bestimmte Softwareelemente wie zum Beispiel Methoden oder Datentypen beschreiben. Diese Dokumente werden domänenspezifisch durch Identifier (Methodennamen, Objektnamen, Klassennamen, etc.) und Kommentare erstellt. Hierbei werden die Identifier durch bekannte Code-Styles voneinander differenziert. Ein solcher Code-Style kann zum Beispiel das Teilen von Wörtern durch einen Unterstrich '\_' oder das Kleinschreiben von Methodennamen, bei denen die Folgewörter jedoch groß geschrieben werden (zum Beispiel \textit{'updateMessageAndSendToReceiver'}), sein. Jedes Softwareelement wird dabei von einem Dokument beschrieben und mittels der Identifier in \ac{LSI} Vektoren transformiert.
 
-Der Nutzer kann in natürlicher Sprache nach Features suchen. Bei jeder Suche wird anhand der Identifiers im Quelltext und der vom Nutzer erstellten Phrasen zum Beschreiben der Features Dokumente im LSI Raum erstellt. Diese Dokumente werden mit Hilfe von Ähnlichkeitsberechnungen zwischen der Query und den Dokumenten differenziert. Die Dokumente, die der Query am ähnlichsten sind, werden als Ergebnis der Suche zurückgegeben.
+Der Nutzer kann in natürlicher Sprache nach Features suchen. Bei jeder Suche wird anhand der Identifiers im Quelltext und der vom Nutzer erstellten Phrasen zum Beschreiben der Features Dokumente im \ac{LSI} Raum erstellt. Diese Dokumente werden mit Hilfe von Ähnlichkeitsberechnungen zwischen der Query und den Dokumenten differenziert. Die Dokumente, die der Query am ähnlichsten sind, werden als Ergebnis der Suche zurückgegeben.
 
 Im folgenden Schritt kann der Nutzer die ihm präsentierten Ergebnisse bewerten und deren Tauglichkeit bestimmen. Falls weitere Dokumente gefunden werden, die in den Kontext der Suche passen, werden diese der Query hinzugefügt. Erst wenn keine weiteren relevanten Dokumente mehr gefunden werden, stoppt der Algorithmus. Das Ergebnis ist dann eine Menge von Dokumenten, die vom Nutzer als relevant angesehen werden und nach der Ähnlichkeitsberechnung des Algorithmus geordnet sind.
 
-Ein anderer Ansatz von Peng Shao erweitert den von Marcus et al. (\cite{marcus1}\cite{marcus2}), indem das LSI Ranking mit einem Ranking durch einen statischen Kontrollflußgraphen kombiniert wird \cite{shao}.
+Ein anderer Ansatz von Peng Shao erweitert den von Marcus et al. (\cite{marcus1}\cite{marcus2}), indem das \ac{LSI} Ranking mit einem Ranking durch einen statischen Kontrollflußgraphen kombiniert wird \cite{shao}.
 
-Wie bereits oben beschrieben wird jede Methode des Programms durch ein Dokument mit den entsprechenden Identifiern beschrieben. Durch den LSI Algorithmus wird unter Berücksichtigung der Eingabe-Query das Ranking für jedes Dokument berechnet. Danach wird eine Menge der Methoden aus Dokumenten erstellt, die einen höheren Wert als ein bestimmter empirisch ermittelter Grenzwert im Ranking erreichen. Von diesen Methoden wird dann eine Menge der \textit{callers} und \textit{callees} erstellt.
+Wie bereits oben beschrieben wird jede Methode des Programms durch ein Dokument mit den entsprechenden Identifiern beschrieben. Durch den \ac{LSI} Algorithmus wird unter Berücksichtigung der Eingabe-Query das Ranking für jedes Dokument berechnet. Danach wird eine Menge der Methoden aus Dokumenten erstellt, die einen höheren Wert als ein bestimmter empirisch ermittelter Grenzwert im Ranking erreichen. Von diesen Methoden wird dann eine Menge der \textit{callers} und \textit{callees} erstellt.
 
-Die Methoden werden anhand der LSI Werte und der Werte des Rankings des Kontrollflußgraphen absteigend ausgegeben. Somit kombiniert dieser Ansatz beide Rankings und erhöht dadurch die Genauigkeit der Ausgabe.
+Die Methoden werden anhand der \ac{LSI} Werte und der Werte des Rankings des Kontrollflußgraphen absteigend ausgegeben. Somit kombiniert dieser Ansatz beide Rankings und erhöht dadurch die Genauigkeit der Ausgabe.
 
 Durch die Kombination beider Verfahren können Features anhand der Dokumente identifiziert und deren Wirkungsweise mit Hilfe des Kontrollflußgraphen genauer erkannt werden.
 
-%Felix
 \subsection{Dynamische Feature Location Technologien}
+
+In diesem Abschnitt werden dynamische Feature Location Technologien vorgestellt. Analog zur statischen Analyse wird die dynamische Analyse zunächst definiert und dann anhand von zwei Beispiele aus den verschiedenen Output-Kategorien erklärt.
 
 \subsection*{Dynamische Analyse}
 
 Hauptmerkmal der dynamischen Analyse ist ihre Durchführung während der Laufzeit eines Programms. Das bedeutet, die Ausführung des Programms ist zwingend erforderlich und während der Laufzeit werden Informationen gesammelt, um wahrscheinliche Features zu lokalisieren. Dabei können ausschließlich funktionale Features gefunden werden, da die dynamische Analysetechnik an eine eingeschränkte Sicht auf das Programm gebunden ist, die der Sicht des Anwenders entspricht. 
 
-Ähnlich wie bei der statischen Analyse unterscheidet man zwischen Plain-Output-Techniken, bei denen mögliche, zu einem Feature gehörende, Quellcodebestandteile ungeordnet zurückgeliefert werden und Guided-Output-Techniken, bei denen die ausgegebenen Komponenten durch zusätzliche Informationen in Zusammenhang gebracht werden und ihr Kontext genauer erläutert wird. 
-
 \subsection*{Technologie Beispiel - Plain Output}
 
-In ihrer wissenschaftlichen Arbeit \textit{Location Program Features by using Execution Slices} benutzen die Autoren W. Eric Wong, Swapna S. Gokhale, Joseph R. Horgan und Kishor S. Trivedi ein dynamisches Plain-Output-Verfahren zur Analyse von Code \cite{Executionslices}. Sie verwenden dabei Execution Slicing im Gegensatz zum Static Slicing. Beide Techniken werden unter Program Slicing zusammengefasst.
+In ihrer wissenschaftlichen Arbeit \textit{Location Program Features by using Execution Slices} benutzen Eric Wong, Swapna Gokhale, Joseph Horgan und Kishor Trivedi ein dynamisches Plain-Output-Verfahren zur Analyse von Code \cite{Executionslices}. Sie verwenden dabei Execution Slicing im Gegensatz zum Static Slicing. Beide Techniken werden unter Program Slicing zusammengefasst.
 
-Slices können verschiedene Bestandteile eines Programms sein wie z.B. Code-Blöcke oder Kontrollstrukturen. Auch sogenannte c- und p-uses können Bestandteile einer Slice sein.
+Slices können verschiedene Bestandteile eines Programms sein, wie zum Beispiel Code-Blöcke oder Kontrollstrukturen. Auch sogenannte c- und p-uses können Bestandteile einer Slice sein.
 
-C- und p - uses beschreiben beide den Pfad einer Variable im Programmfluss ohne, dass die Variable verändert wird, wobei c-uses Variablen zur Berechnung dienen und p-uses-Variablen für eine Prädikat oder eine Entscheidung verwendet werden.
+C- und p - uses beschreiben beide den Pfad einer Variable im Programmfluss, ohne dass die Variable verändert wird. Dabei dienen c-uses-Variablen zur Berechnung und p-uses-Variablen werden für ein Prädikat oder eine Entscheidung verwendet.
 
 Faktoren wie Heuristiken, Test Cases, Detailgenauigkeit und Tool-Unterstützung sind ausschlaggebend für den Erfolg einer dynamischen Analysetechnik. Besonderem Augenmerk gilt dabei der Menge der Tests, die dem Programm als Eingabe übergeben werden. Die Autoren heben hervor, wie wichtig die richtigen Testmengen sind und unterscheiden zwischen aufrufenden (invoking) Tests, die sich explizit auf ein bestimmtes Feature und seine Funktionalität konzentrieren und ausschließenden Tests, die alle anderen Test-Sets enthalten, die nicht auf das Feature fokussiert sind. Darunter sind auch die zu finden, die das gesuchte Feature und weitere Komponenten umfassen, d.h. Tests, bei denen das Feature nur ein Bestandteil von vielen ist.
 
-Eine für die Autoren erfolgreiche Herangehensweise war zuerst die Menge aller aufrufenden Tests zu bilden, von denen einige auch die Funktionalität anderer Features testen. Dann bildet man die Menge aller ausschließenden Tests, wobei diese jedoch auch Abschnitte des Quellcodes enthalten können, die vom gesuchten Feature benutzt werden. Die Differenz der beiden ist die Teilmenge, die zur Lokalisierung des gesuchten Features genutzt wird.
+Es wird zuerst die Menge aller aufrufenden Tests gebildet, von denen einige auch die Funktionalität anderer Features testen. Dann wird bildet die Menge aller ausschließenden Tests gebildet, wobei diese auch Abschnitte des Quellcodes enthalten können, die vom gesuchten Feature benutzt werden. Die Differenz der beiden ist die Teilmenge, die zur Lokalisierung des gesuchten Features genutzt wird.
 
-Die aufrufenden Tests sollen sich dabei sehr stark unterscheiden, während die ausschließenden Tests sehr ähnlich sein sollen. Ohne Tool-Unterstützung wäre es sehr Aufwending, Slices, die wie erwähnt aus Code-Blöcken, Kontrollstrukturen, c- oder p-uses bestehen, für jeden einzelnen Testfall zu sammeln. Die Autoren verwendeten deshalb xVue. Dieses Programm zählt für jeden Test, wie oft die angegebenen execution slices verwendet wurden und ordnet dadurch jedem Test die dazugehörigen Slices zu. Weiterhin teilt es die Tests, sofern das noch nicht geschehen ist, in aufrufende und ausschließenden Tests.
+Die aufrufenden Tests sollten sich dabei sehr stark unterscheiden, während die ausschließenden Tests sehr ähnlich sein sollten. Ohne Tool-Unterstützung wäre es sehr Aufwending, Slices, die wie erwähnt aus Code-Blöcken, Kontrollstrukturen, c- oder p-uses bestehen, für jeden einzelnen Testfall zu sammeln. Alternativ kann deshalb zum Beispiel xVue verwendet werden. Dieses Programm zählt für jeden Test, wie oft die angegebenen execution slices verwendet wurden und ordnet dadurch jedem Test die dazugehörigen Slices zu. Weiterhin teilt es die Tests, sofern das noch nicht geschehen ist, in aufrufende und ausschließenden Tests ein.
 
-Die Autoren erläuterten das Verfahren an einer Fallstudie mit der wissenschaftlichen Software SHARPE, die aus 35 412 Zeilen C-Code besteht. Sie fokussierten sich auf 5 Features und sammelten aufrufende und ausschließende Tests mit dem heuristischen Verfahren, das bereits beschrieben wurde.
+In \cite{Executionslices} wird das Verfahren an einer Fallstudie mit der wissenschaftlichen Software SHARPE erläutert, die aus 35 412 Zeilen C-Code besteht. Sie fokussierten sich auf 5 Features und sammelten aufrufende und ausschließende Tests mit dem bereits beschriebenen heuristischen Verfahren.
 
-xVue lieferte im Bezug auf Code-Blöcke und Kontrollstrukturen als Slices gute Ergebnisse, was die Lokalisierung der Features im Code betraf. Die dann zurückgelieferten Ergebnisse wurden von Experten bezüglich SHARPE verifiziert. Die Zuordnung von p- und c-uses ließ sich nicht vollständig verifizieren, da die Software derart komplex ist, das selbst die Experten nicht sämtliche Ergebnisse nachvollziehen konnten.
+Dabei lieferte xVue im Bezug auf Code-Blöcke und Kontrollstrukturen als Slices gute Ergebnisse, was die Lokalisierung der Features im Code betraf. Die dann zurückgelieferten Ergebnisse wurden von Experten bezüglich SHARPE verifiziert. Die Zuordnung von p- und c-uses ließ sich nicht vollständig verifizieren, da die Software derart komplex ist, das selbst die Experten nicht sämtliche Ergebnisse nachvollziehen konnten.
 
-Nach der Auswertung der Studie kamen die Autoren zu dem Schluss, dass die auf execution slices basierende Methode als ein Einstiegspunkt für Feature Location genutzt werden kann und stellten ihre Eignung dieser Analysetechnik besonders für komplexe System fest, in denen sich implementierte Features über mehrere Module erstrecken. Dennoch steht und fällt das Verfahren mit den Test-Mengen, mit denen das Programm gestartet wird und die Autoren stellten die Vermutung auf, dass auch in ihrer Fallstudie nicht der gesamte relevante Code bezüglich eines Features gefunden wurde. Auch wenn die Verifizierung der c- und p-uses nicht vollständig durchgeführt werden konnte, waren die SHARPE-Experten doch überrascht über die Detailgenauigkeit, mit der xVue Features lokalisiert hatte.
+Nach der Auswertung der Studie kamen die Autoren zu dem Schluss, dass die auf execution slices basierende Methode als ein Einstiegspunkt für Feature Location genutzt werden kann und stellten ihre Eignung dieser Analysetechnik besonders für komplexe System fest, in denen sich implementierte Features über mehrere Module erstrecken. Dennoch steht und fällt das Verfahren mit den Test-Mengen, mit denen das Programm gestartet wird und es wurde die Vermutung aufgestellt, dass auch in ihrer Fallstudie nicht der gesamte relevante Code bezüglich eines Features gefunden wurde. Auch wenn die Verifizierung der c- und p-uses nicht vollständig durchgeführt werden konnte, waren die SHARPE-Experten doch überrascht über die Detailgenauigkeit, mit der xVue Features lokalisiert hatte.
 
-Die Autoren hoben auch die einfache Anwendung des Verfahrens hervor, denn die Berechnung der execution slices war ja durch das Tool vereinfacht und automatisiert worden. Einzig allein die aufrufenden und ausschließenden Tests mussten durch den Anwender definiert werden. Die Identifizierung von c- und p-uses bot den weiteren Vorteil, dass diese Information zur Code Coverage genutzt werden konnte. Das heuristische Verfahren zur Ermittlung der Test-Mengen, welches sie genutzt hatten, bewerteten sie als nützlich für den untersuchten Code, doch generell müssen die Heuristiken jeweils an die Art der Implementation angepasst werden.
+Es wurde weiterhin auch die einfache Anwendung des Verfahrens hervorgehoben, denn die Berechnung der execution slices war ja durch das Tool vereinfacht und automatisiert worden. Einzig allein die aufrufenden und ausschließenden Tests mussten durch den Anwender definiert werden. Die Identifizierung von c- und p-uses bot den weiteren Vorteil, dass diese Information zur Code Coverage genutzt werden konnte. Das heuristische Verfahren zur Ermittlung der Test-Mengen, welches sie genutzt hatten, bewerteten sie als nützlich für den untersuchten Code, doch generell müssen die Heuristiken jeweils an die Art der Implementation angepasst werden.
 
 Die Autoren kommen zu dem Schluss, dass sich ihr Verfahren durchaus für die Lokalisierung von relevantem Code bezüglich eines Features eignet. Es ist besonders nützlich, um in großen Code-Bereichen die relevanten Zeilen zu finden, die ein solches Feature implementieren. Dennoch hat das Verfahren die typische Schwäche der dynamischen Analyse: es ist schwierig, alle Komponenten im Code, die einem Feature zuzuordnen sind, zu entdecken und die Wahrscheinlichkeit ist groß, dass einige Komponenten nicht entdeckt werden. Der große Vorteil der Methode besteht in der Tool-Unterstützung, wodurch sie sehr einfach durchzuführen ist. 
 
 \subsection*{Technologie Beispiel - Guided Output}
 
-In dem Paper \textit{Feature Location via Information Retrieval based Filtering of a Single Scenario Execution Trace} von Dapeng Liu, Andrian Marcus, Denys Poshyvanyk und Vaclav Rajlich werden die Techniken LSI und Execution-Trace-Analyse zusammen genutzt \cite{DynmicGuided}. Sie nennen das Verfahren Single Trace and Information Retrieval (SITIR).
+In dem Paper \textit{Feature Location via Information Retrieval based Filtering of a Single Scenario Execution Trace} von Dapeng Liu, Andrian Marcus, Denys Poshyvanyk und Vaclav Rajlich werden die Techniken \ac{LSI} und Execution-Trace-Analyse zusammen genutzt \cite{DynmicGuided}. Sie nennen das Verfahren \ac{SITIR}.
 
-SITIR arbeitet mit einer einzigen Trace, die jedoch durch Filtertechniken ausreicht, um Quellcode zu finden, der zu einem Feature gehört. Um die Größe der Traces zu verringern, werden sogenannte marked traces benutzt, d.h. es kann genau bestimmt werden, wo der die Aufzeichnung des Traces beginnt und wo sie aufhört. Dazu diente den Autoren das Tool Java Platform Debugger Architecture, kurz JPDA. Zum eigentlichen Filtern der Trace wird LSI verwendet, wobei Identifier und Kommentare mit einem Index versehen werden. Der Anwender kann dadurch natürlich-sprachliche Queries nutzen und erhält als Ergebnis eine geordnete Liste, wobei die Elemente des Quellcodes ( Methoden, Klassen etc. ) an vorderster Stelle stehen, die am wahrscheinlichsten einem Feature zugeordnet werden können.
+\ac{SITIR} arbeitet mit einer einzigen Spur, die jedoch durch Filtertechniken ausreicht, um Quellcode zu finden, der zu einem Feature gehört. Um die Größe der Spuren zu verringern, werden sogenannte \textit{marked traces} benutzt, d.h. es kann genau bestimmt werden, wo der die Aufzeichnung des Spuren beginnt und wo sie aufhört. Dazu diente das Tool Java Platform Debugger Architecture, kurz JPDA. Zum eigentlichen Filtern der Spur wird \ac{LSI} verwendet, wobei Identifier und Kommentare mit einem Index versehen werden. Der Anwender kann dadurch natürlich-sprachliche Queries nutzen und erhält als Ergebnis eine geordnete Liste, wobei die Elemente des Quellcodes (Methoden, Klassen etc.) an vorderster Stelle stehen, die am wahrscheinlichsten einem Feature zugeordnet werden können.
 
-Da auch SITIR ein dynamisches Verfahren ist, hängt der Erfolg der Technik auch hier von dem Anwender ab. So spielt es für die eigentliche marked trace eine tragende Rolle, wo die Marker-Punkte gesetzt wurden. Weiterhin erstellt er die Queries, d.h. er formuliert Wörter, die das Feature beschreiben. Wenig Aufwand durch den Benutzer erfordert das Erstellen der Indexe für die Quellcodebestandteile, da dies nur einmal geschehen muss. SITIR ist ein iterativer Prozess. Ein erstes Ergebnis, das eine Liste sortierter Methoden darstellt, die dem Feature zugeordnet wurden, bedarf der Begutachtung durch den Anwender. Dieser muss, sofern nicht die richtigen Methoden gefunden wurden, seine Queries verfeinern und kann dafür die Methodenliste als Hilfsmittel nehmen.
+Da auch \ac{SITIR} ein dynamisches Verfahren ist, hängt der Erfolg der Technik auch hier von dem Anwender ab. So spielt es für die eigentliche marked trace eine tragende Rolle, wo die Marker-Punkte gesetzt wurden. Weiterhin erstellt er die Queries, d.h. er formuliert Wörter, die das Feature beschreiben. Wenig Aufwand durch den Benutzer erfordert das Erstellen der Indexe für die Quellcodebestandteile, da dies nur einmal geschehen muss. \ac{SITIR} ist ein iterativer Prozess. Ein erstes Ergebnis, das eine Liste sortierter Methoden darstellt, die dem Feature zugeordnet wurden, bedarf der Begutachtung durch den Anwender. Dieser muss, sofern nicht die richtigen Methoden gefunden wurden, seine Queries verfeinern und kann dafür die Methodenliste als Hilfsmittel nehmen.
 
-Das Verfahren testeten die Autoren an dem Texteditor JEdit und der Entwicklungsumgebung Eclipse. Beide sind größtenteils in Java implementiert. In Eclipse wurden zur Feature Location Bug-Beschreibungen genutzt, von denen jedoch die zu ändernde Stelle im Code bekannt war, um sie mit der Ausgabe des Programms vergleichen zu können. Bei der Analyse von JEdit wurde SITIR mit der reinen LSI-Technik verglichen. SITIR erwies sich dabei als deutlich robuster als LSI im Bezug auf schlecht spezifizierte Queries der Benutzer. Bezüglich Eclipse wurde SITIR mit der Feature-Location-Technik PROMESIR verglichen sowie mit SPR und LSI. Die Ausgaben von SITIR und PROMESIR waren sehr ähnlich, doch SITIR besaß den Vorteil, nur eine einzige Trace zu benötigen, während PROMESIR mehrere Eingabeszenarien mit verschieden Traces brauchte, genauso wie das Basis-Verfahren SPR, dass ähnlich wie LSI bei der Eclispse-Analyse deutlich schlechter abschnitt als das Verfahren der Autoren.
+Das Verfahren wurde an dem Texteditor JEdit und der Entwicklungsumgebung Eclipse getestet. Beide sind größtenteils in Java implementiert. In Eclipse wurden zur Feature Location Bug-Beschreibungen genutzt, von denen jedoch die zu ändernde Stelle im Code bekannt war, um sie mit der Ausgabe des Programms vergleichen zu können. Bei der Analyse von JEdit wurde \ac{SITIR} mit der reinen \ac{LSI}-Technik verglichen. \ac{SITIR} erwies sich dabei als deutlich robuster als \ac{LSI} im Bezug auf schlecht spezifizierte Queries der Benutzer. Bezüglich Eclipse wurde \ac{SITIR} mit der Feature-Location-Technik PROMESIR verglichen, sowie mit dem \ac{SPR} und \ac{LSI}. Die Ausgaben von \ac{SITIR} und PROMESIR waren sehr ähnlich, doch \ac{SITIR} besaß den Vorteil, nur eine einzige Spur zu benötigen, während PROMESIR mehrere Eingabeszenarien mit verschieden Spuren brauchte. Das galt auch für das Basis-Verfahren \ac{SPR}, das ähnlich wie \ac{LSI} bei der Eclispse-Analyse deutlich schlechter abschnitt als das Verfahren der Autoren.
 
-Wie effektiv ihre Technik wirklich war, wollten die Autoren nicht allein an den Fallstudien festmachen, was zum Einen daran lag, dass JEdit kein wirklich großes Softwareprojekt war und zum Anderen an ihrem fehlenden Fachwissen bezüglich Eclipse und daher konnten sie nicht ausschließen, dass es hier effektivere Methoden gab, ein Feature im Quellcode zu finden.
+Wie effektiv ihre Technik wirklich war, wollten die Autoren nicht allein an den Fallstudien festmachen. Das lag einerseits daran, dass JEdit kein wirklich großes Softwareprojekt war und andereseits an ihrem fehlenden Fachwissen bezüglich Eclipse. Daher konnten sie nicht ausschließen, dass es hier effektivere Methoden gab, ein Feature im Quellcode zu finden.
 
-Die Autoren kamen zu dem Schluss, dass SITIR trotzdem gut nutzbar war, um Features zu lokalisieren. Es hatte sich im Vergleich mit ähnlich-weit entwickelten Techniken wie PROMESIR gezeigt, dass es brauchbare Ergebnisse lieferte und weniger abhängig von Queries war wie LSI. Auch die Benutzung erfordert nur geringen Aufwand, da der Anwender lediglich eine Trace erstellen und anschließend Queries in natürlicher Sprache formulieren muss.
+Die Autoren kamen zu dem Schluss, dass \ac{SITIR} trotzdem gut nutzbar war, um Features zu lokalisieren. Es hatte sich im Vergleich mit ähnlich weit entwickelten Techniken wie PROMESIR gezeigt, dass es brauchbare Ergebnisse lieferte und weniger abhängig von Queries war wie \ac{LSI}. Auch die Benutzung erfordert nur geringen Aufwand, da der Anwender lediglich eine Spur erstellen und anschließend Queries in natürlicher Sprache formulieren muss.
 
 Eine vielversprechende Zukunft haben laut den Autoren kombinierte Techniken, die sich sämtlicher verfügbarer Quellen bedienen und dabei dynamische als auch statische Verfahren nutzen. 
 
 \subsection{Textuelle Feature Location Technologien}
+
+Der folgende Abschnitt befasst sich mit textuellen Feature Location Technologien. Zunächst soll die textuelle Suche erklärt werden, welche im Folgenden von zwei unterschiedlichen Ansätzen genauer erläutert wird.
 
 \subsection*{Textuelle Suche}
 
@@ -221,30 +211,34 @@ Die Textuelle Suche nach Features im Quellcode eines Programms ist eine der erst
 
 Bei einem geringen Umfang des Programmcodes können für die Suche innerhalb des Codes einfache Tools wie zum Beispiel das Linux/Unix-Kommando \textit{grep} verwendet werden, das gegebene Texte oder Textdateien nach bestimmten eingegebenen Mustern absucht und diese ausgibt. Tools dieser Art können häufig mit regulären Ausdrücken verwendet werden, die die textuelle Suche erheblich mächtiger und vielseitiger machen.
 
-Bei einer größeren Menge an Lines of Code (LOC) eines Programms werden üblicherweise Methoden des \textit{Indexing and Searching} angewandt. Ein Tools, das mit dieser Methode arbeitet, ist das Feature Location And Textual Tracing Tool (FLOAT$^3$) \cite{textual}. Gesucht wird üblicherweise mit einer Suchquery. Die Indexierung des Codes besteht aus dem Erstellen von sogenannten Dokumenten für jede Methode oder jedes Feld im Code, das alle Wörter enthält, die in der Methode oder dem Datenfeld verwendet werden. Hierbei werden üblicherweise Füll- und Stoppwörter wie 'the' oder 'a' automatisch entfernt.
- Zusätzlich wird das \textit{stemming} auf die Wörter in den Dokumenten angewandt und zusammengesetzte Wörter wie zum Beispiel \mbox{'updateMessageAndSendToReceiver'} werden in die einzelnen Bestandteile ohne Füllwörter zerlegt, in diesem Fall in 'update', 'message', 'send' und 'receiver'.
+Bei einer größeren Menge an Lines of Code (LOC) eines Programms werden üblicherweise Methoden des \textit{Indexing and Searching} angewandt. Ein Tool, das mit dieser Methode arbeitet, ist das Feature Location And Textual Tracing Tool (FLOAT$^3$) \cite{textual}. Gesucht wird üblicherweise mit einer Suchquery. Die Indexierung des Codes besteht aus dem Erstellen von sogenannten Dokumenten für jede Methode oder jedes Feld im Code, das alle Wörter enthält, die in der Methode oder dem Datenfeld verwendet werden. Hierbei werden üblicherweise Füll- und Stoppwörter wie zum Beispiel die englischen Wörter 'the' oder 'a' automatisch entfernt.
+ Zusätzlich wird das \textit{stemming} auf die Wörter in den Dokumenten angewandt und zusammengesetzte Wörter, wie zum Beispiel\\ \mbox{'updateMessageAndSendToReceiver'}, werden in die einzelnen Bestandteile ohne Füllwörter zerlegt. In diesem Fall lautet die Zerlegung 'update', 'message', 'send' und 'receiver'.
  
- Die Query und jedes Dokument werden dann in einen Vektor konvertiert. Bei einer Suche wird dann der Query-Vektor mit den verschiedenen Dokumenten-Vektoren auf ihre Ähnlichkeit verglichen und ein Score bestimmt. Die Dokumente mit dem höchsten Score werden dann als bestes Suchergebnis vorgeschlagen.
+Die Query und jedes Dokument werden dann in einen Vektor konvertiert. Bei einer Suche wird dann der Query-Vektor mit den verschiedenen Dokumenten-Vektoren auf ihre Ähnlichkeit verglichen und ein Score bestimmt. Die Dokumente mit dem höchsten Score werden dann als bestes Suchergebnis vorgeschlagen.
  
 Mit diesem Verfahren können auch große Mengen an LOCs schnell und gut skalierbar durchsucht werden. Tools wie FLOAT$^3$ sind unter anderem auch als Plugin für verschiedene Entwicklungsumgebungen verfügbar und dadurch leicht zu integrieren.
 
 \section{Vergleich}
 
-Die statische Analyse untersucht den Quelltext vor der Ausführung und hat somit Zugriff auf sämtliche Bestandteile des Programms. Dadurch können Features jeglicher Art gefunden werden, seien sie nun funktional oder nicht nicht-funktional. Eine mehrmalige Wiederholung der statischen Analyse eines
+Die statische Analyse untersucht den Quelltext vor der Ausführung und hat somit Zugriff auf sämtliche Bestandteile des Programms. Dadurch können Features jeglicher Art gefunden werden, seien sie nun funktional oder nicht-funktional. Eine mehrmalige Wiederholung der statischen Analyse eines
 Programms ist idempotent und liefert immer wieder das gleiche Ergebnis.
 
-Während also die statische Analyse einen größeren Feature-Raum bezüglich ihrer Quantität und Diversität untersuchen kann, ist die dynamische
-Analyse an das Programm zu Ausführung gebunden und damit auch an spezifische Eingabeparameter, die den Verlauf bestimmen. Somit kann das Auffinden von Features stark eingeschränkt sein und selbst ein gefundenes Feature lässt sich nur schwer generalisieren.
+Während die statische Analyse einen größeren Feature-Raum bezüglich ihrer Quantität und Diversität untersuchen kann, ist die dynamische Analyse an das Programm zur Ausführung gebunden und damit auch an spezifische Eingabeparameter, die den Verlauf bestimmen. Somit kann das Auffinden von Features stark eingeschränkt sein und selbst ein gefundenes Feature lässt sich nur schwer generalisieren.
 
-Betrachtet man Verfahren zu statischen und dynamischen Analyse als binären Klassifikator, dann liefern statische Verfahren mit größerer 
-Wahrscheinlichkeit eine Menge false-positives. Diese resultieren nicht nur aus den quantitativ höheren Featureraum sondern auch aus
-der Feststellung, dass die Wahrscheinlichkeit eines gefundenen Features nie genau bestimmt, sondern nur approximiert werden kann. Statische
-Verfahren finden also mit größerer Wahrscheinlichkeit Features, die eigentlich gar keine sind, die sogenannte Überapproximiation.
+Betrachtet man Verfahren zur statischen und dynamischen Analyse als binären Klassifikator, dann liefern statische Verfahren mit größerer Wahrscheinlichkeit viele false-positives. Diese resultieren nicht nur aus den quantitativ höheren Featureraum sondern auch aus der Feststellung, dass die Wahrscheinlichkeit eines gefundenen Features nie genau bestimmt, sondern nur approximiert werden kann. Statische Verfahren finden also mit größerer Wahrscheinlichkeit Features, die eigentlich gar keine sind. Dieses Phänomen wird Überapproximiation genannt.
 
-Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, liefern vermehrt false-negatives. Existierende Features
-werden in diesem Fall nicht als solche erkannt und falsch klassifiziert, was als Unterapproximation bezeichnet wird.
+Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, liefern vermehrt false-negatives. Existierende Features werden in diesem Fall nicht als solche erkannt und falsch klassifiziert, was als Unterapproximation bezeichnet wird.
 
 Worin sich dynamische und statische Verfahren weiterhin unterscheiden, ist die Vorarbeit, die bezüglich der Eingabedaten geleistet werden muss. Während statische Verfahren, wie bereits erwähnt, bei mehrmaliger Durchführung das gleiche Ergebnis liefern sollten, sind dynamische Verfahren nur so gut in der Identifizierung von Features im Quellcode wie die Eingabeparameter, mit denen das Programm gestartet wird. Diese müssen mit verschiedenen Heuristiken genau evaluiert werden, da eine ungenaue Testmenge in völlig unbrauchbare Ausgaben münden kann. Es ist in dieser Hinsicht aufwändiger als bei einer statischen Analyse und der Anwender, der die Testfälle auswählt, muss qualifiziert und erfahren sein.
+
+%TODO Vergleich von vorgestellten Methoden einbringen
+Die von uns vorgestellten Technologien unterscheiden sich wie folgt...
+
+Statische Verfahren unterscheiden
+
+Dynamische Verfahren unterscheiden
+
+Abgrenzung zu textuellen Verfahren
 
 \clearpage
 
@@ -259,6 +253,31 @@ Hierbei stehen dem Anwender eine vielzahl unterschiedlicher Technologien zur Ver
 Letztendlich sollte die zu verwendende Technologie je nach Bedarf und Anforderungen ausgewählt oder mit anderen kombiniert werden.
 
 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%												TABELLENVERZEICHNIS 												       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+%TODO nur wenn wir am Ende mehr als eine Tabelle haben
+\listoftables
+
+%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%											ABKÜRZUNGSVERZEICHNIS					 							       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Abkürzungsverzeichnis}
+\begin{acronym}[FPGA]
+	\acro{PDA}{Program Dependence Analysis}
+	\acro{LSI}{Latent Semantic Indexing}
+	\acro{AOIG}{Action-Oriented Identifier Graph}
+	\acro{DO}{Direct-Object Node}
+	\acro{IR}{Information Retrieval}
+	\acro{SITIR}{Single Trace and Information Retrieval}
+	\acro{SPR}{Scenario-based Probabilistic Ranking}
+\end{acronym}
 
 %%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %												LITERATURVERZEICHNIS 												       %
