@@ -103,7 +103,7 @@ Als Ergebnis der Suche wird ein Ergebnis-Graph generiert. Die Knoten des Graphen
 
 Mit diesem Graphen können gesuchte Features anhand der Methoden lokalisiert werden. Durch die strukturellen Beziehungen zu anderen Methoden kann zusätzlich die Einbindung einer Funktion in den Quellcode erfasst werden, was das Verändern oder Warten dieser Funktionalität vereinfacht.
 
-\begin{table}[h]
+\begin{table}[t]
 	\centering
 	\begin{tabular}{|c|l|}
 		\hline
@@ -155,7 +155,7 @@ Durch die Kombination beider Verfahren können Features anhand der Dokumente ide
 
 In diesem Abschnitt werden dynamische Feature Location Technologien vorgestellt. Analog zur statischen Analyse wird die dynamische Analyse zunächst definiert und dann anhand von zwei Beispiele aus den verschiedenen Output-Kategorien erklärt.
 
-\subsection*{Dynamische Analyse}
+\subsection*{Dynamische Analyse}\label{dynamic}
 
 Hauptmerkmal der dynamischen Analyse ist ihre Durchführung während der Laufzeit eines Programms. Das bedeutet, die Ausführung des Programms ist zwingend erforderlich und während der Laufzeit werden Informationen gesammelt, um wahrscheinliche Features zu lokalisieren. Dabei können ausschließlich funktionale Features gefunden werden, da die dynamische Analysetechnik an eine eingeschränkte Sicht auf das Programm gebunden ist, die der Sicht des Anwenders entspricht. 
 
@@ -169,7 +169,7 @@ C- und p - uses beschreiben beide den Pfad einer Variable im Programmfluss, ohne
 
 Faktoren wie Heuristiken, Test Cases, Detailgenauigkeit und Tool-Unterstützung sind ausschlaggebend für den Erfolg einer dynamischen Analysetechnik. Besonderem Augenmerk gilt dabei der Menge der Tests, die dem Programm als Eingabe übergeben werden. Die Autoren heben hervor, wie wichtig die richtigen Testmengen sind und unterscheiden zwischen aufrufenden (invoking) Tests, die sich explizit auf ein bestimmtes Feature und seine Funktionalität konzentrieren und ausschließenden Tests, die alle anderen Test-Sets enthalten, die nicht auf das Feature fokussiert sind. Darunter sind auch die zu finden, die das gesuchte Feature und weitere Komponenten umfassen, d.h. Tests, bei denen das Feature nur ein Bestandteil von vielen ist.
 
-Es wird zuerst die Menge aller aufrufenden Tests gebildet, von denen einige auch die Funktionalität anderer Features testen. Dann wird bildet die Menge aller ausschließenden Tests gebildet, wobei diese auch Abschnitte des Quellcodes enthalten können, die vom gesuchten Feature benutzt werden. Die Differenz der beiden ist die Teilmenge, die zur Lokalisierung des gesuchten Features genutzt wird.
+Es wird zuerst die Menge aller aufrufenden Tests gebildet, von denen einige auch die Funktionalität anderer Features testen. Dann wird die Menge aller ausschließenden Tests gebildet, wobei diese auch Abschnitte des Quellcodes enthalten können, die vom gesuchten Feature benutzt werden. Die Differenz der beiden ist die Teilmenge, die zur Lokalisierung des gesuchten Features genutzt wird.
 
 Die aufrufenden Tests sollten sich dabei sehr stark unterscheiden, während die ausschließenden Tests sehr ähnlich sein sollten. Ohne Tool-Unterstützung wäre es sehr Aufwending, Slices, die wie erwähnt aus Code-Blöcken, Kontrollstrukturen, c- oder p-uses bestehen, für jeden einzelnen Testfall zu sammeln. Alternativ kann deshalb zum Beispiel xVue verwendet werden. Dieses Programm zählt für jeden Test, wie oft die angegebenen execution slices verwendet wurden und ordnet dadurch jedem Test die dazugehörigen Slices zu. Weiterhin teilt es die Tests, sofern das noch nicht geschehen ist, in aufrufende und ausschließenden Tests ein.
 
@@ -231,14 +231,47 @@ Dynamische Verfahren dagegen, auf einen kleineren Feature-Raum beschränkt, lief
 
 Worin sich dynamische und statische Verfahren weiterhin unterscheiden, ist die Vorarbeit, die bezüglich der Eingabedaten geleistet werden muss. Während statische Verfahren, wie bereits erwähnt, bei mehrmaliger Durchführung das gleiche Ergebnis liefern sollten, sind dynamische Verfahren nur so gut in der Identifizierung von Features im Quellcode wie die Eingabeparameter, mit denen das Programm gestartet wird. Diese müssen mit verschiedenen Heuristiken genau evaluiert werden, da eine ungenaue Testmenge in völlig unbrauchbare Ausgaben münden kann. Es ist in dieser Hinsicht aufwändiger als bei einer statischen Analyse und der Anwender, der die Testfälle auswählt, muss qualifiziert und erfahren sein.
 
-%TODO Vergleich von vorgestellten Methoden einbringen
-Die von uns vorgestellten Technologien unterscheiden sich wie folgt...
+Textuelle Verfahren können je nach dem zu Grunde liegenden Quellcode unterschiedlich gut verwendet werden, um Features im Code zu lokalisieren. Ihre Anwendungsfähigkeit bleiben aber immer daran gebunden, ob die richtigen oder passenden Suchbegriffe und -muster eingegeben werden. Da textuelle Verfahren außer üblichen sprachlichen Erweiterungen wie zum Beispiel dem \textit{stemming} keine weiteren Ähnlichkeitsvergleiche zwischen Wörtern ausführen können, ist ihre Nutzbarkeit gegenüber anderen umfangreicheren Tools stark beschränkt.
 
-Statische Verfahren unterscheiden
+Die von uns in dieser Arbeit vorgestellten Technologien unterscheiden sich in ihrer Anwendbarkeit nicht nur dadurch, dass sie statische oder dynamische Analyse betreiben, sondern auch durch weitere Merkmale, wie zum Beispiel der Grad der erforderlichen Nutzer-Interatkion mit dem Programm und der Input, der an das Programm übergeben wird.
 
-Dynamische Verfahren unterscheiden
+Der Erfolg von Technologien, die mit einer Suchquery arbeiten, hängt maßgeblich von ihrer Formulierung und Zusammensetzung ab. Alle drei vorgestellten statischen Verfahren (\cite{shepherd}, \cite{marcus2}, \cite{shao}) und das dynamische Guided-Output Verfahren (\cite{DynmicGuided}) erfordern daher eine Interaktion des Nutzers mit dem Programm, um die Qualität der Query iterativ zu verbessern. Der Grad der Interatkion wird nach \cite{survey} wie in Tabelle \ref{comparison} auf Seite \pageref{comparison} kategorisiert.
 
-Abgrenzung zu textuellen Verfahren
+Verfahren, die wie das dynamische Plain-Output Verfahren von \cite{Executionslices} als Eingabe eine Menge von Test Cases hat, sind analog zu der Suchquery von der Qualität der Eingabe abhängig. Diese Menge sollte für die jeweilige Art des zu untersuchenden Programms möglichst aussagekräftige und diversifizierte Test Cases aufweisen, um ein möglichst gutes Ergebnis mit dem Verfahren erzielen zu können.
+
+Bei der Trace Analyse kommt es, wie bereits in Abschnitt \ref{dynamic} beschrieben, auf die Marker Punkte der aufzuzeichnenden Spuren an. Diese werden vom Nutzer definiert oder ausgewählt und erfordern auch hier ein gewisses Maß an Nutzerinteraktion und Erfahrung.
+
+Insgesamt hängt es somit stark von der Art des Verfahrens, sowie der Erfahrung und Interaktion des Nutzers ab, welche Qualität der Input eines Verfahrens zur Lokalisierung von Features aufweist und welche Qualität das Ergebnis der Suche hat.
+
+\begin{table}[t]
+	\centering
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{Verfahren} & \textbf{Technologie} & \textbf{Input} & \textbf{Output} & \textbf{Grad der} \\
+		&&&&\textbf{Nuterinteraktion} \\
+		\hline
+		Shepherd & \ac{PDA} & Query & \ac{AOIG} & ++ \\
+		et al. \cite{shepherd} &&&& \\
+		\hline
+		Marcus & \ac{LSI} & Query & \hspace{0.1cm}Textdokumente für \hspace{0.1cm}& + \\
+		et al. \cite{marcus2} &&&\hspace{0.1cm}Software-Elemente& \\
+		\hline
+		Shao & \ac{LSI}, \ac{PDA} & Query & Kontrollflußgraph, & + \\
+		et al. \cite{shao}&&&Textdokumente für & \\
+		&&&Software-Elemente  &  \\
+		\hline
+		Wong & Trace Analysis & \hspace{0.1cm} Menge von \hspace{0.1cm} & Ausführbare Datei & +++ \\
+		et al. \citealp{Executionslices}&&Test Cases && \\
+		\hline
+		Liu & Trace Analysis, & Szenario, & Ausführbare Datei, & + \\
+		et al. \cite{DynmicGuided}&\ac{LSI}&Query&Textdokumente & \\
+		&&&für Methoden& \\
+		\hline
+	\end{tabular}
+	\vspace{0.2cm}
+	\caption{Vergleich der Verfahren bezüglich der Nutzerinteratkion nach \cite{survey}}
+	\label{comparison}
+\end{table}
 
 \clearpage
 
@@ -261,7 +294,6 @@ Letztendlich sollte die zu verwendende Technologie je nach Bedarf und Anforderun
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-%TODO nur wenn wir am Ende mehr als eine Tabelle haben
 \listoftables
 
 %%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
